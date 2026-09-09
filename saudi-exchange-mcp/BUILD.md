@@ -105,14 +105,17 @@ Extends `saudi_exchange_reports.google_finance` types/service/CLI and tests/fixt
 Placeholder — pending implementation. This document is a Proposed contract only. Draft-time inspection (2026-09-09) of live mappings/datasets and of stored Maaden PDF extraction is recorded in Done when / Constraints to specify field-meaning and gap classes; it is **not** slice 04 acceptance evidence and must not be copied into git as Google payloads.
 
 ## Review
-Placeholder — pending independent plan review. No APPROVE_PLAN. Builder cannot approve this proposal.
+Plan review complete.
+Plan approval: APPROVE_PLAN disp-04-plan-001 reviewer=bc-1099f3f1-56df-5d97-b2c9-2ba31d1efdd4 (Cursor Grok 4.6) contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 snapshot=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218 blockers=none artifact=loop/manifests/disp-04-plan-001-result.md
+Implementation approval: none
+Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Reviewer / plan-review
-Dispatch ID / launch state / input identity: disp-04-plan-001 / pending-launch / contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 snapshot=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218
-Pending result / last consumed dispatch: none / disp-04-draft-001
+Worker / role / phase: pending / Builder / Building
+Dispatch ID / launch state / input identity: disp-04-impl-001 / pending-launch / contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 baseline=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218
+Pending result / last consumed dispatch: none / disp-04-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
 Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` with sorted relative paths, SHA-256 file bytes, types, executable modes, and symlink targets. Includes source, tests, configuration, lockfiles, protocol files, loop identity tools, and non-secret evidence docs. `BUILD.md` and `SLICES.md` are hashed from their LOOP contract extracts so Proof/Review/Loop-state bookkeeping, Status, Next, run status, release evidence, and Shipped/Now placement do not change snapshot identity.
@@ -124,14 +127,15 @@ Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
 Repair awaiting review: false
-Review events: none
+Review events:
+- event=rev-04-plan-001 dispatch=disp-04-plan-001 phase=plan-review verdict=APPROVE_PLAN reviewer=bc-1099f3f1-56df-5d97-b2c9-2ba31d1efdd4 contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 snapshot_before=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218 snapshot_after=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218 gaps=none rejection_count=0 no_progress=0 artifact=loop/manifests/disp-04-plan-001-result.md
 Budget limit / consumed / measurement: Not configured; no execution budget was supplied
 Blocker / resume status / resume action / recheck condition / deadline: none
 Advance phase: none
 Next slice ID / draft: none
 
 ## Status
-Proposed
+Not started
 
 ## Next
-Independent plan review of this Proposed contract. No application-code implementation until APPROVE_PLAN for matching contract and baseline identities.
+Builder implementation pending launch for `disp-04-impl-001`. Plan approval is valid for the recorded contract and baseline.
