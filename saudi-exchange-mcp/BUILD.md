@@ -22,11 +22,12 @@ Given a pilot company's Arabic/English name and/or ticker and a requested period
 - Claiming availability or reliability across all listed companies based on the pilot.
 
 ## Constraints
-- Execution remains unstarted until the user authorizes a loop and confirms its target. This Proposed contract has no plan approval.
+- Execution of Hybrid Pilot v0 through slice 05 is authorized. This Proposed contract still has no plan approval; do not implement until an independent Reviewer returns APPROVE_PLAN for matching contract and baseline identities.
 - Use Saudi Exchange as the discovery authority. A report hosted elsewhere is acceptable only when reached through a verified company report link with preserved provenance; do not silently switch to general-web substitutes.
 - Prefer a suitable documented API if verified; otherwise assess direct public retrieval and browser-driven report selection as alternatives. Choose based on evidence and permitted access, not assumed endpoints.
-- Select the smallest representative pilot sample that can demonstrate the intended inputs and report distinctions, document it, and let independent plan review assess adequacy. The discussion specifies no required sample count.
-- Re-check current official library documentation when implementation choices are made. Do not introduce paid OCR/model services as an implicit dependency.
+- Select the smallest representative pilot sample that can demonstrate the intended inputs and report distinctions, document it, and let independent plan review assess adequacy. Include Saudi Aramco (2222) plus at least one additional Main Market company so Arabic/English/ticker, annual/interim, and language distinctions can be evidenced. The discussion specifies no larger required sample count.
+- Runtime for this slice: Python 3.12 with stdio later (slice 05). Choose HTTP and storage libraries from existing-environment evidence; do not introduce paid OCR/model services or credentials as an implicit dependency.
+- Re-check current official library documentation when implementation choices are made.
 - Observe the shared financial-data and untrusted-source invariants in AGENTS.md.
 - Report storage/cache requirements apply to Saudi Exchange reports only. The later Google Finance branch has separate transient-data handling and upstream reuse requirements; this slice must not introduce a shared market-response archive.
 
@@ -51,14 +52,17 @@ Implementation approval: none
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
-Execution mode / tool adapter: Not configured
-Coordinator: none
-Worker / role / phase: none
-Dispatch ID / launch state / input identity: none
+Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
+Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
+Worker / role / phase: pending / Reviewer / plan-review
+Dispatch ID / launch state / input identity: disp-01-plan-001 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6
 Pending result / last consumed dispatch: none
-Snapshot capture and recheck commands / coverage / exclusions: Not configured; record reproducible project-specific commands before first dispatch as required by LOOP.md
-Baseline snapshot: none
-Contract identity: none
+Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
+Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
+Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` with sorted relative paths, SHA-256 file bytes, types, executable modes, and symlink targets. Includes source, tests, configuration, lockfiles, protocol files, loop identity tools, and non-secret evidence docs. `BUILD.md` and `SLICES.md` are hashed from their LOOP contract extracts so Proof/Review/Loop-state bookkeeping, Status, Next, run status, release evidence, and Shipped/Now placement do not change snapshot identity.
+Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `node_modules/`, `.tox/`, `storage/`, `loop/manifests/`, `evidence/live-payloads/`, `HANDOFF.md`, `*.pyc`, `*.pyo`, `.DS_Store`. Manifests are stored outside their own coverage.
+Baseline snapshot: sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 file_count=10 path=loop/manifests/snapshot.json
+Contract identity: sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 path=loop/manifests/contract.json
 Candidate snapshot: none
 Rejection count: 0
 Consecutive no-progress repairs: 0
@@ -74,4 +78,4 @@ Next slice ID / draft: none
 Proposed
 
 ## Next
-Await authorization to execute and confirmation/replacement of the proposed Hybrid Pilot v0 target through slice 05. Then the coordinator inspects the actual implementation workspace, records the tool adapter and snapshot/contract capture commands, captures review inputs, and dispatches independent plan review. Do not implement before a valid APPROVE_PLAN verdict.
+Independent plan review is pending launch for dispatch `disp-01-plan-001`. Do not implement before a valid APPROVE_PLAN verdict.

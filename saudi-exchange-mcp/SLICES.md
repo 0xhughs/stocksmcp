@@ -3,7 +3,7 @@
 ## Product
 One custom MCP server connects an AI assistant to two sources: **Google Finance for broad company research: prices/overview, news, profile/about, earnings, and structured financial statements (income statement, balance sheet, and cash flow)**, and **Saudi Exchange (Tadawul) for official financial statements and reports — القوائم المالية والتقارير**. Reuse and extend the existing Google Finance MCP implementation, adding Saudi Exchange company/report discovery, PDF download, text/table extraction, and page-level evidence. A shared company lookup resolves Arabic/English names and tickers to verified source-specific identifiers. The assistant chooses the appropriate tools and explains the returned evidence; users connect one MCP and ask naturally.
 
-Current release boundary: **proposed Hybrid Pilot v0**, covering broad company lookups, targeted Google Finance section queries, official-report requests, and combined requests for a small, documented sample of Main Market companies. Both branches must work together: name/ticker → relevant Google company sections with source/period/freshness metadata, and name/ticker → report → original PDF → readable evidence → cited answer. A broad company lookup returns a coherent overview of the named sections with explicit coverage/missing-data status; targeted questions fetch the relevant sections. The hybrid scope is included at the user's request; the pilot boundary remains a planning proposal until execution is authorized. No market-wide coverage promise is made.
+Current release boundary: **Hybrid Pilot v0**, covering broad company lookups, targeted Google Finance section queries, official-report requests, and combined requests for a small, documented sample of Main Market companies. Both branches must work together: name/ticker → relevant Google company sections with source/period/freshness metadata, and name/ticker → report → original PDF → readable evidence → cited answer. A broad company lookup returns a coherent overview of the named sections with explicit coverage/missing-data status; targeted questions fetch the relevant sections. The hybrid scope is included at the user's request; execution of this pilot is authorized. No market-wide coverage promise is made.
 
 ## Users and expected requests
 The requester researching Saudi-listed companies through an MCP-capable assistant, locally and through user-initiated requests.
@@ -35,14 +35,14 @@ The requester researching Saudi-listed companies through an MCP-capable assistan
 - Reuse upstream code through a documented, revision-pinned fork/integration. Inspect before execution, preserve notices, and avoid exposing unrelated upstream features merely because they exist. The user explicitly broadened scope beyond prices to most company-page information. Inventory available public sections and dataset coverage, including all named core sections, before claiming completeness. The Google Finance AI chat, private portfolios/watchlists, account automation, and trading are not part of this data-retrieval product.
 
 ## Loop target
-**Proposed target: Hybrid Pilot v0, through slice 05 — One MCP for company research and official reports.** Slices 01–05 are inside this proposed target. Stop after independent acceptance and final release verification; broader coverage remains outside it.
-**Authority:** prepare/update the project pack only. Obtain authorization to run and confirmation or replacement of this proposed target before the first dispatch. No background execution, deployment, publishing, or future scope is authorized by this file.
+**Confirmed target: Hybrid Pilot v0, through slice 05 — One MCP for company research and official reports.** Slices 01–05 are inside this target. Stop after independent acceptance and final release verification; broader coverage remains outside it.
+**Authority:** User instruction dated 2026-09-09 authorized execution of this confirmed target, including Google Finance company research and Saudi Exchange official-report retrieval. No background execution, deployment, publishing, purchases, or work outside this target is authorized.
 
 ## Run status
-Prepared
+Running
 
 ## Open decisions
-- Before execution: confirm the proposed pilot boundary and the MCP host to connect. The user's hybrid scope is already recorded; do not ask to reconfirm it merely to implement ordinary design choices.
+- Resolved 2026-09-09: Hybrid Pilot v0 through slice 05 is the confirmed execution target. Release validation host: a local stdio MCP server exercised through an in-workspace MCP client, with Cursor MCP install documented. Ordinary design choices do not require reconfirmation.
 - During slice 01: establish a permitted, reliable report-retrieval route and document pilot companies/periods from actual evidence. Aramco is a concrete first candidate from the discussion; sample size is not prescribed.
 - During slices 03–04: choose and record the upstream revision, inspect the source and current license/policy, inventory the public company sections, and prove Saudi overview/news/profile/earnings/financial retrieval through the reused integration. Resolve incompatibilities with the intended integration before relying on it; do not claim the code license grants data rights.
 - Choose runtime, SDK, integration packaging, report storage, and extraction/OCR libraries from repository evidence and official documentation. The reuse candidate uses Python/stdio, but compatibility of the final package still needs verification. Do not introduce paid services or credentials without existing authority.
@@ -72,8 +72,8 @@ Release review events / last consumed dispatch: none
 ### 01 — Company report discovery and original-PDF retrieval
 Goal: turn a company name/ticker and report period into a verified original financial-report PDF with provenance.
 Provides: shared company identity with distinct source identifiers, observed Saudi retrieval route, documented pilot coverage, report selection, bounded local PDF download/cache, and real-report evidence.
-Depends on: none; execution authority and target confirmation precede dispatch.
-Target membership: inside proposed Hybrid Pilot v0.
+Depends on: none; execution authority and target confirmation are recorded.
+Target membership: inside Hybrid Pilot v0.
 Out: content interpretation, Google Finance quote integration, MCP host wiring, market-wide collection.
 Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/01-report-retrieval.md` (not created yet).
 
@@ -82,28 +82,28 @@ Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/01-report-retri
 Goal: make downloaded reports searchable/readable as text and tables, retaining PDF page provenance and financial metadata.
 Provides: Arabic/English extraction, OCR fallback where needed, uncertain/missing-data handling, and representative checks of values, units, periods, and restatements.
 Depends on: 01.
-Target membership: inside proposed Hybrid Pilot v0.
+Target membership: inside Hybrid Pilot v0.
 Out: quote retrieval, MCP host wiring, investment advice, universal automatic financial-statement normalization.
 
 ### 03 — Google Finance overview, profile, and news
 Goal: reuse the existing Google Finance MCP code for a verified Saudi-company overview with quotes/statistics, profile/about, and relevant news through shared company identity.
 Provides: inspected/revision-pinned integration, preserved notices, verified ticker/exchange mappings, live Aramco coverage, quote/freshness metadata, news publisher/link/time, profile fields, and public-section coverage inventory. Use synthetic fixtures and transient live checks; hide changing source dataset details behind clear capabilities.
 Depends on: 01 for shared identity; report extraction in 02 is not a technical dependency.
-Target membership: inside proposed Hybrid Pilot v0.
+Target membership: inside Hybrid Pilot v0.
 Out: financial-table parsing in 04, report parsing, private accounts, persistent Google payload archives, hosted service, streaming/polling, trading, and silent source substitution.
 
 ### 04 — Google Finance earnings and financial statements
 Goal: retrieve and interpret the available earnings, income-statement, balance-sheet, and cash-flow datasets for Saudi companies through the reused integration.
 Provides: verified field meanings and actual-versus-estimate labels, annual/quarterly periods where available, units/currency, original labels/values, explicit coverage/gaps, and meaningful comparisons. Prove representative figures against source displays and official PDFs; document missing history and discrepancies rather than guessing field positions or combining incompatible data.
 Depends on: 03 for the Google integration and 02 for original-report cross-check evidence.
-Target membership: inside proposed Hybrid Pilot v0.
+Target membership: inside Hybrid Pilot v0.
 Out: representing Google tables as audited PDF originals, exhaustive coverage claims, invented figures, unrelated AI chat/account functions, or persistent Google response warehousing.
 
 ### 05 — One MCP for company research and official reports
 Goal: expose shared lookup, overview/quotes, news, profile/about, earnings, income statement/balance sheet/cash flow, and original-report retrieval/reading through one MCP connection, with correct source selection and cited answers.
 Provides: host installation, clear tool contracts/descriptions, broad-company, targeted-section, official-report, and combined prompt demonstrations, separate provenance, explicit partial-source failures, pilot end-to-end proof, and final release verification. The host assistant composes analysis; a separate server-side model is not required.
 Depends on: 01, 02, 03, and 04.
-Target membership: inside proposed Hybrid Pilot v0; final target slice.
+Target membership: inside Hybrid Pilot v0; final target slice.
 Out: deployment, public multi-user service, continuous monitoring, trading, or treating pilot coverage as full-market coverage.
 
 ### Future consideration — Broader company and historical coverage

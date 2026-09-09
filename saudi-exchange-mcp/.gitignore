@@ -1,0 +1,18 @@
+# Local / generated paths. Protocol files and application source remain tracked.
+
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.node_modules/
+storage/
+evidence/live-payloads/
+loop/manifests/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
