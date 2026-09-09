@@ -26,6 +26,7 @@ class DatasetPurpose(str, Enum):
     MARKET_NEWS = "market_news"
     EARNINGS_HISTORY = "earnings_history"
     EARNINGS_HISTORY_ALTERNATE = "earnings_history_alternate"
+    CURRENT_EARNINGS_DETAIL = "current_earnings_detail"
     FINANCIALS = "financials"
     INTRADAY_CHART = "intraday_chart"
     RELATED_SECURITIES = "related_securities"
@@ -265,4 +266,262 @@ class InventoryResult:
             "source_url": self.source_url,
             "retrieved_at": self.retrieved_at.isoformat(),
             "product_api_hides_rpc_ids": self.product_api_hides_rpc_ids,
+        }
+
+
+@dataclass(frozen=True)
+class LabeledFigure:
+    """A Google figure that is either present or explicitly unavailable (never coerced to 0)."""
+
+    value: float | None
+    kind: str
+    availability: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "value": self.value,
+            "kind": self.kind,
+            "availability": self.availability,
+        }
+
+
+def unavailable_figure(kind: str) -> LabeledFigure:
+    return LabeledFigure(value=None, kind=kind, availability="unavailable")
+
+
+def present_figure(kind: str, value: float) -> LabeledFigure:
+    return LabeledFigure(value=value, kind=kind, availability="present")
+
+
+@dataclass(frozen=True)
+class EarningsPeriod:
+    year: int
+    quarter: int
+    period_end: tuple[int, int, int] | None
+    currency: str | None
+    revenue_actual: LabeledFigure
+    revenue_estimate: LabeledFigure
+    eps_actual: LabeledFigure
+    eps_estimate: LabeledFigure
+    surprise: LabeledFigure
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "year": self.year,
+            "quarter": self.quarter,
+            "period_end": list(self.period_end) if self.period_end else None,
+            "currency": self.currency,
+            "revenue_actual": self.revenue_actual.to_dict(),
+            "revenue_estimate": self.revenue_estimate.to_dict(),
+            "eps_actual": self.eps_actual.to_dict(),
+            "eps_estimate": self.eps_estimate.to_dict(),
+            "surprise": self.surprise.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class EarningsResult:
+    identity: AttachedIdentity
+    periods: tuple[EarningsPeriod, ...]
+    unavailable: tuple[str, ...]
+    source_url: str
+    retrieved_at: datetime
+    earnings_html_loading: bool = False
+    used_alternate_fallback: bool = False
+    alternate_deduplicated: bool = False
+    source_dataset: str | None = "earnings_history"
+    article_summary: None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "identity": self.identity.to_dict(),
+            "periods": [p.to_dict() for p in self.periods],
+            "unavailable": list(self.unavailable),
+            "source_url": self.source_url,
+            "retrieved_at": self.retrieved_at.isoformat(),
+            "earnings_html_loading": self.earnings_html_loading,
+            "used_alternate_fallback": self.used_alternate_fallback,
+            "alternate_deduplicated": self.alternate_deduplicated,
+            "source_dataset": self.source_dataset,
+            "article_summary": self.article_summary,
+        }
+
+
+@dataclass(frozen=True)
+class DisplayCell:
+    display_text: str
+    availability: str
+    numeric: float | None
+    period_header: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "display_text": self.display_text,
+            "availability": self.availability,
+            "numeric": self.numeric,
+            "period_header": self.period_header,
+        }
+
+
+@dataclass(frozen=True)
+class DisplayRow:
+    label: str
+    cells: tuple[DisplayCell, ...]
+
+
+@dataclass(frozen=True)
+class DisplayTable:
+    statement: str
+    unit_note: str | None
+    headers: tuple[str, ...]
+    rows: tuple[DisplayRow, ...]
+
+
+@dataclass(frozen=True)
+class MetricPeriod:
+    year: int
+    quarter: int | None
+    currency: str | None
+    period_end: tuple[int, int, int] | None
+    comparative_period_end: tuple[int, int, int] | None
+    metrics: tuple[Any, ...]
+    comparative_metrics: tuple[Any, ...] | None
+
+
+@dataclass(frozen=True)
+class ParsedFinancials:
+    ticker: tuple[str, str] | None
+    name: str | None
+    quarterly: tuple[MetricPeriod, ...]
+    annual: tuple[MetricPeriod, ...]
+
+
+@dataclass(frozen=True)
+class StatementRow:
+    label: str | None
+    original_label: str | None
+    value: float | None
+    scale: str
+    currency: str | None
+    label_status: str
+    availability: str
+    display_text: str | None = None
+    slot_index: int | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "label": self.label,
+            "original_label": self.original_label,
+            "value": self.value,
+            "scale": self.scale,
+            "currency": self.currency,
+            "label_status": self.label_status,
+            "availability": self.availability,
+            "display_text": self.display_text,
+        }
+
+
+@dataclass(frozen=True)
+class StatementPeriod:
+    year: int
+    quarter: int | None
+    period_end: tuple[int, int, int] | None
+    comparative_period_end: tuple[int, int, int] | None
+    currency: str | None
+    duration: str
+    rows: tuple[StatementRow, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "year": self.year,
+            "quarter": self.quarter,
+            "period_end": list(self.period_end) if self.period_end else None,
+            "comparative_period_end": list(self.comparative_period_end) if self.comparative_period_end else None,
+            "currency": self.currency,
+            "duration": self.duration,
+            "rows": [row.to_dict() for row in self.rows],
+        }
+
+
+@dataclass(frozen=True)
+class FinancialsResult:
+    identity: AttachedIdentity
+    statement: str
+    frequency: str
+    periods: tuple[StatementPeriod, ...]
+    unavailable: tuple[str, ...]
+    source_url: str
+    retrieved_at: datetime
+    source_dataset: str | None = "financials"
+    display_label_gap: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "identity": self.identity.to_dict(),
+            "statement": self.statement,
+            "frequency": self.frequency,
+            "periods": [p.to_dict() for p in self.periods],
+            "unavailable": list(self.unavailable),
+            "source_url": self.source_url,
+            "retrieved_at": self.retrieved_at.isoformat(),
+            "source_dataset": self.source_dataset,
+            "display_label_gap": self.display_label_gap,
+        }
+
+
+@dataclass(frozen=True)
+class CoverageSection:
+    section: str
+    frequency: str
+    status: str
+    notes: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "section": self.section,
+            "frequency": self.frequency,
+            "status": self.status,
+            "notes": self.notes,
+        }
+
+
+@dataclass(frozen=True)
+class CoverageResult:
+    identity: AttachedIdentity
+    retrieved_at: datetime
+    source_url: str
+    sections: tuple[CoverageSection, ...]
+    gap_classes: tuple[dict[str, Any], ...]
+    dated: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "identity": self.identity.to_dict(),
+            "retrieved_at": self.retrieved_at.isoformat(),
+            "source_url": self.source_url,
+            "dated": self.dated or self.retrieved_at.date().isoformat(),
+            "sections": [s.to_dict() for s in self.sections],
+            "gap_classes": list(self.gap_classes),
+        }
+
+
+@dataclass(frozen=True)
+class CrosscheckResult:
+    identity: AttachedIdentity
+    pairs: tuple[Any, ...]
+    google_is_not_audited: bool
+    google_frequency: str
+    source_url: str
+    retrieved_at: datetime
+    pdf_content_hash: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "identity": self.identity.to_dict(),
+            "google_is_not_audited": self.google_is_not_audited,
+            "google_frequency": self.google_frequency,
+            "source_url": self.source_url,
+            "retrieved_at": self.retrieved_at.isoformat(),
+            "pdf_content_hash": self.pdf_content_hash,
+            "pairs": [p.to_dict() if hasattr(p, "to_dict") else p for p in self.pairs],
         }

@@ -9,7 +9,16 @@ from pathlib import Path
 
 from saudi_exchange_reports.client import resolve_and_retrieve
 from saudi_exchange_reports.errors import InvalidPdf, RetrievalError, UnsafeDestination
-from saudi_exchange_reports.google_finance.service import get_inventory, get_news, get_overview, get_profile
+from saudi_exchange_reports.google_finance.service import (
+    get_coverage,
+    get_crosscheck,
+    get_earnings,
+    get_financials,
+    get_inventory,
+    get_news,
+    get_overview,
+    get_profile,
+)
 from saudi_exchange_reports.http import UrllibTransport
 from saudi_exchange_reports.identity import resolve_company
 from saudi_exchange_reports.listing import ReportType
@@ -109,10 +118,26 @@ def main(argv: list[str] | None = None) -> int:
         ("google-news", "Google Finance security news for a pilot company."),
         ("google-profile", "Google Finance profile/about for a pilot company."),
         ("google-inventory", "Inventory of Google Finance quote-page sections."),
+        ("google-earnings", "Google Finance earnings actual versus estimate."),
+        ("google-coverage", "Earnings/financials coverage and gap classes."),
     ):
         gp = sub.add_parser(google_cmd, help=help_text)
         gp.add_argument("query")
         gp.add_argument("--format", choices=("json", "text"), default="json")
+
+    gf = sub.add_parser("google-financials", help="Google Finance income statement, balance sheet, or cash flow.")
+    gf.add_argument("query")
+    gf.add_argument("--statement", required=True, help="income|balance|cash (or full names)")
+    gf.add_argument("--frequency", required=True, choices=("annual", "quarterly"))
+    gf.add_argument("--format", choices=("json", "text"), default="json")
+
+    gx = sub.add_parser("google-crosscheck", help="Dual-provenance Google vs official PDF comparison.")
+    gx.add_argument("query")
+    gx.add_argument("--facts", choices=("fixture",), help="Use published FS original strings (not live Google).")
+    gx.add_argument("--pdf", help="Path to stored original PDF inside --storage.")
+    gx.add_argument("--storage", default="storage/reports")
+    gx.add_argument("--frequency", choices=("annual", "quarterly"), default="annual")
+    gx.add_argument("--format", choices=("json", "text"), default="json")
 
     retrieve_p = sub.add_parser("retrieve", help="List and download a report PDF.")
     retrieve_p.add_argument("--name")
@@ -165,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd in {"extract", "read", "search"}:
         return _reading_command(args)
 
-    if args.cmd in {"google-overview", "google-news", "google-profile", "google-inventory"}:
+    if args.cmd.startswith("google-"):
         return _google_command(args)
 
     if args.cmd == "resolve":
@@ -326,6 +351,24 @@ def main(argv: list[str] | None = None) -> int:
     return 1
 
 
+def _statement_name(value: str) -> str:
+    folded = value.strip().lower().replace(" ", "_")
+    aliases = {
+        "income": "income_statement",
+        "income_statement": "income_statement",
+        "is": "income_statement",
+        "balance": "balance_sheet",
+        "balance_sheet": "balance_sheet",
+        "bs": "balance_sheet",
+        "cash": "cash_flow",
+        "cash_flow": "cash_flow",
+        "cf": "cash_flow",
+    }
+    if folded not in aliases:
+        raise ValueError(f"Unknown statement {value!r}")
+    return aliases[folded]
+
+
 def _google_command(args: argparse.Namespace) -> int:
     source = google_source_from_args(args)
     try:
@@ -335,6 +378,34 @@ def _google_command(args: argparse.Namespace) -> int:
             result = get_news(args.query, source=source)
         elif args.cmd == "google-profile":
             result = get_profile(args.query, source=source)
+        elif args.cmd == "google-inventory":
+            result = get_inventory(args.query, source=source)
+        elif args.cmd == "google-earnings":
+            result = get_earnings(args.query, source=source)
+        elif args.cmd == "google-financials":
+            result = get_financials(
+                args.query,
+                statement=_statement_name(args.statement),
+                frequency=args.frequency,
+                source=source,
+            )
+        elif args.cmd == "google-coverage":
+            result = get_coverage(args.query, source=source)
+        elif args.cmd == "google-crosscheck":
+            from saudi_exchange_reports.google_finance.compare import fixture_pdf_facts
+
+            pdf_facts = fixture_pdf_facts() if args.facts == "fixture" else None
+            pdf_path = Path(args.pdf) if getattr(args, "pdf", None) else None
+            if pdf_facts is None and pdf_path is None:
+                pdf_facts = fixture_pdf_facts()
+            result = get_crosscheck(
+                args.query,
+                source=source,
+                pdf_facts=pdf_facts,
+                pdf_path=pdf_path,
+                storage_root=Path(args.storage) if pdf_path is not None else None,
+                google_frequency=args.frequency,
+            )
         else:
             result = get_inventory(args.query, source=source)
     except ValueError as exc:

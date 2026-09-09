@@ -102,19 +102,19 @@ Extends `saudi_exchange_reports.google_finance` types/service/CLI and tests/fixt
 - D7: Reviewer runs `PYTHONPATH=src python3 -m pytest tests/ -q` (or project venv) **without** network to Google; live tests marked `live_google` and skipped by default; stored-PDF tests skip if the gitignored file is missing. Slice 01–03 tests pass. Audit that git does not contain live Google bodies. Snapshot commands remain `python3 loop/identity.py snapshot …` as below.
 
 ## Proof
-Placeholder — pending implementation. This document is a Proposed contract only. Draft-time inspection (2026-09-09) of live mappings/datasets and of stored Maaden PDF extraction is recorded in Done when / Constraints to specify field-meaning and gap classes; it is **not** slice 04 acceptance evidence and must not be copied into git as Google payloads.
+Proposed by Builder disp-04-impl-001 (not independently accepted). Earnings actual-vs-estimate, income statement (display-bound labels), balance sheet/cash flow (retrieved, Google labels unverified until displayed), coverage CLI, and Maaden PDF cross-check. Default pytest: 151 passed, 6 skipped (coordinator recheck 2026-09-09). Opt-in live Google claimed 6 passed. Evidence: `evidence/04-google-financials/`. Google tables are not treated as audited originals.
 
 ## Review
 Plan review complete.
 Plan approval: APPROVE_PLAN disp-04-plan-001 reviewer=bc-1099f3f1-56df-5d97-b2c9-2ba31d1efdd4 (Cursor Grok 4.6) contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 snapshot=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218 blockers=none artifact=loop/manifests/disp-04-plan-001-result.md
-Implementation approval: none
+Implementation approval: none — pending independent review disp-04-impl-review-001
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Builder / Building
-Dispatch ID / launch state / input identity: disp-04-impl-001 / pending-launch / contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 baseline=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218
+Worker / role / phase: pending / Reviewer / implementation-review
+Dispatch ID / launch state / input identity: disp-04-impl-review-001 / pending-launch / contract=sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 baseline=sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218 candidate=sha256:bb6fd783940ad104932c4345411c449f28131f21b11f88624dee2d1da02b6352
 Pending result / last consumed dispatch: none / disp-04-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
@@ -122,7 +122,7 @@ Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` wi
 Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `node_modules/`, `.tox/`, `storage/`, `loop/manifests/`, `evidence/live-payloads/`, `HANDOFF.md`, `*.pyc`, `*.pyo`, `.DS_Store`. Manifests are stored outside their own coverage.
 Baseline snapshot: sha256:77fb005da3f5dd1cbe357e717c289f335c97da7b6a52737747bbceed243e1218 file_count=89 path=loop/manifests/snapshot.json
 Contract identity: sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91 path=loop/manifests/contract.json
-Candidate snapshot: none
+Candidate snapshot: sha256:bb6fd783940ad104932c4345411c449f28131f21b11f88624dee2d1da02b6352 file_count=99 path=loop/manifests/candidate.json builder=bc-6a534259-8332-560b-bf7c-3d3797d032c7
 Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
@@ -135,7 +135,7 @@ Advance phase: none
 Next slice ID / draft: none
 
 ## Status
-Not started
+Ready for review
 
 ## Next
-Builder implementation pending launch for `disp-04-impl-001`. Plan approval is valid for the recorded contract and baseline.
+Independent implementation review pending launch for `disp-04-impl-review-001`. Default pytest must not require Google. Do not mark Shipped without APPROVE_IMPLEMENTATION.

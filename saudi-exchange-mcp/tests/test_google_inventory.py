@@ -28,7 +28,7 @@ def test_inventory_selects_by_purpose_not_hardcoded_ds3():
     assert all(row.rpc_id_hidden for row in inv.datasets)
 
 
-def test_inventory_defers_earnings_and_records_empty_init():
+def test_inventory_supports_earnings_and_financials():
     inv = get_inventory(
         "ARAMCO",
         source=ScriptedSource(
@@ -37,8 +37,9 @@ def test_inventory_defers_earnings_and_records_empty_init():
         ),
     )
     by_purpose = {row.purpose: row for row in inv.datasets}
-    assert by_purpose["earnings_history"].product == "defer"
-    assert by_purpose["financials"].product == "defer"
+    assert by_purpose["earnings_history"].product == "support"
+    assert by_purpose["earnings_history_alternate"].product == "support"
+    assert by_purpose["financials"].product == "support"
     assert by_purpose["empty_init"].product == "non_data"
     assert by_purpose["empty_init"].empty is True
     assert by_purpose["market_news"].product == "observe"

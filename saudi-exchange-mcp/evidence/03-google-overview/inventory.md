@@ -18,8 +18,8 @@ Aramco source URL (final): `/finance/beta/quote/2222:TADAWUL`. Maaden: `/finance
 | Company profile | `ds:5` | **Support** (profile/about) | Payload + labelled About pairs on the quote page. |
 | Security news feed | `ds:21` | **Support** (news) | Company/security feed. Headlines/snippets only; `read_status=not_read`. |
 | Market news feed | `ds:20` | Observe | Not used as company news. Draft-time body was empty; not productized as company news. |
-| Earnings history and estimates (and alternate) | `ds:9`, `ds:10` | **Defer to 04** | Not parsed. |
-| Financials / estimates | `ds:19` | **Defer to 04** | Income/balance/cash-flow tables. |
+| Earnings history and estimates (and alternate) | `ds:9`, `ds:10` | **Support** (slice 04; alternate is fallback only, not a second feed) | Parsed as actual-versus-estimate quarterly history. Identical primary/alternate bodies are de-duplicated. |
+| Financials / estimates | `ds:19` (live Aramco and Maaden 2026-09-09); mapping fixtures may use `ds:17` | **Support** (slice 04) | Selected by compiler purpose `Financials / estimates`, not a frozen `ds:N`. Income statement labels bound from the displayed table. Balance sheet and cash flow remain display-label unverified when those tables are not embedded. |
 | Intraday / one-month charts (points and OHLCV) | `ds:12`–`ds:15` | Observe, not productized | No chart product. |
 | Related securities | `ds:7` | Observe, not productized | Must not mutate identity. |
 | Analyst ratings and price targets | `ds:8` | Observe, not productized | |
@@ -34,4 +34,4 @@ Aramco source URL (final): `/finance/beta/quote/2222:TADAWUL`. Maaden: `/finance
 
 Library: `get_inventory("ARAMCO")`. CLI: `python3 -m saudi_exchange_reports google-inventory ARAMCO --format json`.
 
-Synthetic fixture inventory (no network) is in `tests/test_google_inventory.py`: required purposes, deferred earnings/financials, empty init, empty market statistics, quote key ≠ `ds:3`.
+Synthetic fixture inventory (no network) is in `tests/test_google_inventory.py`: required purposes, **supported** earnings/financials, empty init, empty market statistics, quote key ≠ `ds:3`.

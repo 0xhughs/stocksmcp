@@ -44,7 +44,7 @@ _UPSTREAM_PURPOSE: dict[str, DatasetPurpose] = {
     "Market news feed": DatasetPurpose.MARKET_NEWS,
     "Earnings history and estimates": DatasetPurpose.EARNINGS_HISTORY,
     "Earnings history and estimates alternate": DatasetPurpose.EARNINGS_HISTORY_ALTERNATE,
-    "Current earnings detail": DatasetPurpose.EARNINGS_HISTORY,
+    "Current earnings detail": DatasetPurpose.CURRENT_EARNINGS_DETAIL,
     "Financials / estimates": DatasetPurpose.FINANCIALS,
     "Intraday chart points": DatasetPurpose.INTRADAY_CHART,
     "Intraday OHLCV chart": DatasetPurpose.INTRADAY_CHART,
@@ -72,6 +72,12 @@ _PURPOSE_GROUP: dict[DatasetPurpose, tuple[DatasetPurpose, ...]] = {
     DatasetPurpose.SECURITY_NEWS: (DatasetPurpose.SECURITY_NEWS,),
     DatasetPurpose.MARKET_STATISTICS: (DatasetPurpose.MARKET_STATISTICS,),
     DatasetPurpose.MARKET_NEWS: (DatasetPurpose.MARKET_NEWS,),
+    DatasetPurpose.EARNINGS_HISTORY: (
+        DatasetPurpose.EARNINGS_HISTORY,
+        DatasetPurpose.EARNINGS_HISTORY_ALTERNATE,
+    ),
+    DatasetPurpose.EARNINGS_HISTORY_ALTERNATE: (DatasetPurpose.EARNINGS_HISTORY_ALTERNATE,),
+    DatasetPurpose.FINANCIALS: (DatasetPurpose.FINANCIALS,),
 }
 
 
@@ -98,8 +104,12 @@ class ScriptedSource:
     news: DatasetResponse | None = None
     profile: DatasetResponse | None = None
     market_statistics: DatasetResponse | None = None
+    earnings: DatasetResponse | None = None
+    earnings_alternate: DatasetResponse | None = None
+    financials: DatasetResponse | None = None
     mapping_html: dict[tuple[str, str], str] = field(default_factory=dict)
     fetch_result: FetchResult | None = None
+    last_used_purpose: DatasetPurpose | None = None
 
     def load_quote_page(self, identity: CompanyIdentity) -> QuotePage:
         page = self.quote_page
@@ -123,11 +133,23 @@ class ScriptedSource:
             DatasetPurpose.SECURITY_NEWS: self.news,
             DatasetPurpose.COMPANY_PROFILE: self.profile,
             DatasetPurpose.MARKET_STATISTICS: self.market_statistics,
+            DatasetPurpose.EARNINGS_HISTORY: self.earnings,
+            DatasetPurpose.EARNINGS_HISTORY_ALTERNATE: self.earnings_alternate,
+            DatasetPurpose.FINANCIALS: self.financials,
         }
+        last: DatasetResponse | None = None
         for candidate in grouped:
             response = mapping.get(candidate)
-            if response is not None:
+            if response is None:
+                continue
+            last = response
+            if not dataset_is_empty(response.data) or len(grouped) == 1:
+                self.last_used_purpose = candidate
                 return response
+        if last is not None:
+            self.last_used_purpose = purpose
+            return last
+        self.last_used_purpose = None
         return DatasetResponse(id="", rpc_id="", data=[], error="missing")
 
 
@@ -137,6 +159,7 @@ class LiveGoogleSource:
     def __init__(self, client: GoogleFinanceClient | None = None, *, dump: bool = False) -> None:
         self.client = client or GoogleFinanceClient()
         self.dump = dump or os.environ.get("SAUDI_LIVE_GOOGLE") == "1"
+        self.last_used_purpose: DatasetPurpose | None = None
 
     def load_quote_page(self, identity: CompanyIdentity) -> QuotePage:
         return anyio.run(self._load_quote_page, identity)
@@ -241,6 +264,7 @@ class LiveGoogleSource:
             data = payload.get("data")
             last = DatasetResponse(id=str(payload.get("id", "")), rpc_id=req.rpc_id, data=data)
             if not dataset_is_empty(data):
+                self.last_used_purpose = purpose_from_upstream(req.metadata.purpose)
                 return last
         return last
 

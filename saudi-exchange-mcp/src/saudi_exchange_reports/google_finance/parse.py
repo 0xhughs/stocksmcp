@@ -11,7 +11,18 @@ import re
 from datetime import datetime, timezone
 from typing import Any
 
-from saudi_exchange_reports.google_finance.types import NewsItem
+from saudi_exchange_reports.google_finance.types import (
+    DisplayCell,
+    DisplayRow,
+    DisplayTable,
+    EarningsPeriod,
+    LabeledFigure,
+    MetricPeriod,
+    NewsItem,
+    ParsedFinancials,
+    present_figure,
+    unavailable_figure,
+)
 
 UTC = timezone.utc
 
@@ -251,3 +262,339 @@ def dataset_is_empty(data: Any) -> bool:
     if data == [None] or data == [[None]] or data == [[[None]]]:
         return True
     return False
+
+
+def earnings_html_is_loading(html: str) -> bool:
+    return "Loading Previous Earnings" in html
+
+
+def _looks_like_earnings_row(row: Any) -> bool:
+    if not isinstance(row, list) or len(row) < 10:
+        return False
+    year, quarter = row[3], row[4]
+    if not isinstance(year, int) or isinstance(year, bool):
+        return False
+    if not isinstance(quarter, int) or isinstance(quarter, bool) or quarter not in {1, 2, 3, 4}:
+        return False
+    if year < 1990 or year > 2100:
+        return False
+    metrics = row[9]
+    if not isinstance(metrics, list) or len(metrics) < 17:
+        return False
+    return True
+
+
+def _earnings_rows(data: Any) -> list[Any]:
+    if not isinstance(data, list) or not data:
+        return []
+    candidates: list[Any] = [data]
+    if isinstance(data[0], list):
+        candidates.append(data[0])
+        if data[0] and isinstance(data[0][0], list):
+            candidates.append(data[0][0])
+    for cand in candidates:
+        if isinstance(cand, list) and cand and _looks_like_earnings_row(cand[0]):
+            return cand
+    return []
+
+
+def _numeric_figure(kind: str, value: Any) -> LabeledFigure:
+    if value is None or isinstance(value, bool):
+        return unavailable_figure(kind)
+    if isinstance(value, (int, float)):
+        return present_figure(kind, float(value))
+    return unavailable_figure(kind)
+
+
+def _period_end_tuple(value: Any) -> tuple[int, int, int] | None:
+    if isinstance(value, list) and len(value) == 3 and all(isinstance(x, int) and not isinstance(x, bool) for x in value):
+        return (value[0], value[1], value[2])
+    return None
+
+
+def parse_earnings_payload(data: Any) -> list[EarningsPeriod]:
+    """Parse Earnings history rows. Missing actuals/estimates stay unavailable, never 0."""
+    periods: list[EarningsPeriod] = []
+    for row in _earnings_rows(data):
+        if not _looks_like_earnings_row(row):
+            continue
+        metrics = row[9]
+        currency = metrics[16] if isinstance(metrics[16], str) else None
+        periods.append(
+            EarningsPeriod(
+                year=int(row[3]),
+                quarter=int(row[4]),
+                period_end=_period_end_tuple(metrics[17] if len(metrics) > 17 else None),
+                currency=currency,
+                revenue_actual=_numeric_figure("actual", metrics[0] if len(metrics) > 0 else None),
+                revenue_estimate=_numeric_figure("estimate", metrics[8] if len(metrics) > 8 else None),
+                eps_actual=_numeric_figure("actual", metrics[9] if len(metrics) > 9 else None),
+                eps_estimate=_numeric_figure("estimate", metrics[10] if len(metrics) > 10 else None),
+                surprise=unavailable_figure("surprise"),
+            )
+        )
+    return periods
+
+
+_ABBREV_RE = re.compile(r"^([+-]?\d+(?:\.\d+)?)([TBM])$", re.I)
+_PERCENT_RE = re.compile(r"^([+-]?\d+(?:\.\d+)?)%$")
+_PLAIN_NUM_RE = re.compile(r"^[+-]?\d+(?:\.\d+)?$")
+_MONTHS = {
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12,
+}
+_HEADER_PERIOD_RE = re.compile(
+    r"^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(20\d{2})$",
+    re.I,
+)
+_YEAR_RE = re.compile(r"^(20\d{2})$")
+_TABLE_RE = re.compile(
+    r'<table[^>]*aria-label="Income statement"[^>]*>(.*?)</table>',
+    re.I | re.S,
+)
+_HEADER_RE = re.compile(r'<div class="nQ5Kpf[^"]*">([^<]*)</div>', re.I)
+_LABEL_RE = re.compile(r'<div class="sp5q4e">([^<]+)</div>', re.I)
+_CELL_RE = re.compile(r'<div class="CNzF7d">([^<]*)</div>', re.I)
+_TR_RE = re.compile(r"<tr[^>]*>(.*?)</tr>", re.I | re.S)
+
+
+def expand_display_abbreviation(text: str) -> tuple[float | None, str]:
+    """Expand a Google UI abbreviation. The stored dataset scale remains full units."""
+    raw = html_lib.unescape(text).replace(",", "").replace("\xa0", "").strip()
+    if raw in {"", "-", "—", "–"}:
+        return None, "unavailable"
+    match = _ABBREV_RE.fullmatch(raw)
+    if match:
+        number = float(match.group(1))
+        factor = {"T": 1e12, "B": 1e9, "M": 1e6}[match.group(2).upper()]
+        return number * factor, "display_abbreviation"
+    match = _PERCENT_RE.fullmatch(raw)
+    if match:
+        return float(match.group(1)) / 100.0, "percent"
+    cleaned = raw.replace("+", "")
+    if _PLAIN_NUM_RE.fullmatch(cleaned):
+        return float(cleaned), "full"
+    return None, "unparsed"
+
+
+def parse_income_statement_table(html: str) -> DisplayTable | None:
+    match = _TABLE_RE.search(html)
+    if not match:
+        return None
+    body = match.group(1)
+    rows_html = _TR_RE.findall(body)
+    if not rows_html:
+        return None
+    header_bits = _HEADER_RE.findall(rows_html[0])
+    unit_note = header_bits[0].strip() if header_bits else None
+    headers = tuple(h.strip() for h in header_bits[1:])
+    parsed_rows: list[DisplayRow] = []
+    for tr in rows_html[1:]:
+        labels = _LABEL_RE.findall(tr)
+        cells_raw = _CELL_RE.findall(tr)
+        if not labels:
+            continue
+        cells: list[DisplayCell] = []
+        for i, raw in enumerate(cells_raw):
+            text = html_lib.unescape(raw).strip()
+            numeric, kind = expand_display_abbreviation(text)
+            header = headers[i] if i < len(headers) else ""
+            availability = "unavailable" if kind == "unavailable" else ("present" if numeric is not None else "unavailable")
+            cells.append(
+                DisplayCell(
+                    display_text=text,
+                    availability=availability,
+                    numeric=numeric,
+                    period_header=header,
+                )
+            )
+        parsed_rows.append(DisplayRow(label=html_lib.unescape(labels[0]).strip(), cells=tuple(cells)))
+    if not parsed_rows:
+        return None
+    return DisplayTable(
+        statement="income_statement",
+        unit_note=unit_note,
+        headers=headers,
+        rows=tuple(parsed_rows),
+    )
+
+
+def header_to_period(header: str) -> tuple[int, int | None] | None:
+    text = header.strip()
+    match = _HEADER_PERIOD_RE.fullmatch(text)
+    if match:
+        return int(match.group(2)), _MONTHS[match.group(1)[:3].lower()]
+    match = _YEAR_RE.fullmatch(text)
+    if match:
+        return int(match.group(1)), None
+    return None
+
+
+def _unwrap_financials_company(data: Any) -> list[Any] | None:
+    node = data
+    for _ in range(3):
+        if isinstance(node, list) and len(node) == 1:
+            node = node[0]
+            continue
+        break
+    if not isinstance(node, list) or len(node) != 8:
+        return None
+    if not isinstance(node[0], list) or not isinstance(node[1], list):
+        return None
+    ticker = node[7]
+    if not (isinstance(ticker, list) and len(ticker) == 2 and all(isinstance(x, str) for x in ticker)):
+        return None
+    return node
+
+
+def _metric_currency(metrics: Any) -> str | None:
+    if isinstance(metrics, list) and len(metrics) > 16 and isinstance(metrics[16], str):
+        return metrics[16]
+    return None
+
+
+def _looks_like_metrics(value: Any) -> bool:
+    if not isinstance(value, list) or len(value) < 17:
+        return False
+    return isinstance(value[16], str) and _period_end_tuple(value[17] if len(value) > 17 else None) is not None
+
+
+def parse_financials_payload(data: Any) -> ParsedFinancials:
+    """Walk Financials nested shape. Slot names are not taken from the AVGO enricher."""
+    company = _unwrap_financials_company(data)
+    if company is None:
+        return ParsedFinancials(ticker=None, name=None, quarterly=(), annual=())
+    quarterly_rows, annual_rows = company[0], company[1]
+    name = company[6] if isinstance(company[6], str) else None
+    ticker = (company[7][0], company[7][1])
+    quarterly: list[MetricPeriod] = []
+    for row in quarterly_rows:
+        if not isinstance(row, list) or len(row) < 3:
+            continue
+        year, quarter, metrics = row[0], row[1], row[2]
+        if not isinstance(year, int) or not isinstance(quarter, int) or quarter not in {1, 2, 3, 4}:
+            continue
+        if not _looks_like_metrics(metrics):
+            continue
+        comp = row[3] if len(row) > 3 else None
+        quarterly.append(
+            MetricPeriod(
+                year=year,
+                quarter=quarter,
+                currency=_metric_currency(metrics),
+                period_end=_period_end_tuple(metrics[17]),
+                comparative_period_end=_period_end_tuple(comp[17]) if _looks_like_metrics(comp) else None,
+                metrics=tuple(metrics),
+                comparative_metrics=tuple(comp) if isinstance(comp, list) else None,
+            )
+        )
+    annual: list[MetricPeriod] = []
+    for row in annual_rows:
+        if not isinstance(row, list) or len(row) < 2:
+            continue
+        year, metrics = row[0], row[1]
+        if not isinstance(year, int) or isinstance(year, bool):
+            continue
+        if not _looks_like_metrics(metrics):
+            continue
+        comp = row[2] if len(row) > 2 else None
+        annual.append(
+            MetricPeriod(
+                year=year,
+                quarter=None,
+                currency=_metric_currency(metrics),
+                period_end=_period_end_tuple(metrics[17]),
+                comparative_period_end=_period_end_tuple(comp[17]) if _looks_like_metrics(comp) else None,
+                metrics=tuple(metrics),
+                comparative_metrics=tuple(comp) if isinstance(comp, list) else None,
+            )
+        )
+    return ParsedFinancials(ticker=ticker, name=name, quarterly=tuple(quarterly), annual=tuple(annual))
+
+
+def _display_matches(metric: Any, cell: DisplayCell) -> bool:
+    if cell.availability == "unavailable":
+        return metric is None
+    if metric is None or isinstance(metric, bool) or isinstance(metric, str):
+        return False
+    if not isinstance(metric, (int, float)):
+        return False
+    text = cell.display_text.strip()
+    expanded, kind = expand_display_abbreviation(text)
+    if kind == "unavailable":
+        return False
+    if kind == "display_abbreviation":
+        suffix = text[-1].upper()
+        factor = {"T": 1e12, "B": 1e9, "M": 1e6}[suffix]
+        return round(float(metric) / factor, 2) == round(expanded / factor, 2)
+    if kind == "percent":
+        as_ratio = round(float(metric) * 100.0, 2)
+        as_already_pct = round(float(metric), 2)
+        shown = round(expanded * 100.0, 2)
+        return as_ratio == shown or as_already_pct == shown
+    if kind == "full":
+        return round(float(metric), 2) == round(expanded, 2)
+    return False
+
+
+def period_matches_header(period: MetricPeriod, header: str) -> bool:
+    parsed = header_to_period(header)
+    if parsed is None or period.period_end is None:
+        return False
+    year, month = parsed
+    if period.period_end[0] != year:
+        return False
+    if period.quarter is None:
+        return month is None
+    if month is None:
+        return False
+    return period.period_end[1] == month
+
+
+def bind_display_labels(
+    periods: tuple[MetricPeriod, ...],
+    table: DisplayTable | None,
+) -> dict[int, str]:
+    """Bind Google original labels to metric indices only after display agreement."""
+    if table is None or not periods:
+        return {}
+    bound: dict[int, str] = {}
+    max_len = max((len(p.metrics) for p in periods), default=0)
+    for display_row in table.rows:
+        matching_indices: list[int] = []
+        for index in range(max_len):
+            if index in {16, 17}:
+                continue
+            ok = True
+            saw = False
+            for cell in display_row.cells:
+                period = next((p for p in periods if period_matches_header(p, cell.period_header)), None)
+                if period is None or index >= len(period.metrics):
+                    continue
+                saw = True
+                if not _display_matches(period.metrics[index], cell):
+                    ok = False
+                    break
+            if ok and saw:
+                matching_indices.append(index)
+        if len(matching_indices) == 1:
+            bound[matching_indices[0]] = display_row.label
+    return bound
+
+
+def duration_for(statement: str, frequency: str) -> str:
+    if statement == "balance_sheet":
+        return "point_in_time"
+    if statement == "cash_flow":
+        return "period"
+    return frequency

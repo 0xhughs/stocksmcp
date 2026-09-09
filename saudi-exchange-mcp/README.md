@@ -1,6 +1,6 @@
-# Saudi Exchange reports (slices 01–03)
+# Saudi Exchange reports (slices 01–04)
 
-Python 3.12 library for **pilot** Main Market company identity, report listing, original-PDF retrieval, page-level reading/search, and a **Google Finance** overview/news/profile client for the same identities. This is **not** an MCP server (host wiring is slice 05). Google Finance reuse is local, personal, and user-initiated; it does not license Google or exchange data.
+Python 3.12 library for **pilot** Main Market company identity, report listing, original-PDF retrieval, page-level reading/search, and a **Google Finance** overview/news/profile/earnings/financials client for the same identities. This is **not** an MCP server (host wiring is slice 05). Google Finance reuse is local, personal, and user-initiated; it does not license Google or exchange data. Google tables are not audited Saudi Exchange filings.
 
 Install (local venv):
 
@@ -51,7 +51,7 @@ PYTHONPATH=src python3 -m saudi_exchange_reports search \
   --query 'share capital'
 ```
 
-CLI (slice 03 Google Finance). Commands resolve the **existing** shared identity, then call Google Finance. Do not treat returned quotes, news, or profile text as licensed data; do not commit live payloads. Do not copy live prices or headlines into docs:
+CLI (slices 03–04 Google Finance). Commands resolve the **existing** shared identity, then call Google Finance. Do not treat returned quotes, news, profile text, earnings, or financial tables as licensed data or as audited filings; do not commit live payloads. Do not copy live prices, headlines, or Google JSON into docs:
 
 ```bash
 PYTHONPATH=src python3 -m saudi_exchange_reports resolve ARAMCO --format json
@@ -59,6 +59,13 @@ PYTHONPATH=src python3 -m saudi_exchange_reports google-overview ARAMCO --format
 PYTHONPATH=src python3 -m saudi_exchange_reports google-news ARAMCO --format json
 PYTHONPATH=src python3 -m saudi_exchange_reports google-profile ARAMCO --format json
 PYTHONPATH=src python3 -m saudi_exchange_reports google-inventory ARAMCO --format json
+PYTHONPATH=src python3 -m saudi_exchange_reports google-earnings ARAMCO --format json
+PYTHONPATH=src python3 -m saudi_exchange_reports google-financials ARAMCO --statement income --frequency quarterly
+PYTHONPATH=src python3 -m saudi_exchange_reports google-coverage ARAMCO
+PYTHONPATH=src python3 -m saudi_exchange_reports google-crosscheck MAADEN --facts fixture
+# optional stored-PDF comparison (gitignored Maaden FS):
+# PYTHONPATH=src python3 -m saudi_exchange_reports google-crosscheck MAADEN \
+#   --pdf storage/reports/1211/<sha256>.pdf --storage storage/reports
 ```
 
 Native text is used when a page has text operators. Image-only pages are rasterized and OCR’d with local Tesseract (`eng+ara`). Pages that remain unreadable are flagged, not omitted. Extraction JSON is cached under `storage/reports/_extracted/` (gitignored). Do not commit PDFs or full extraction dumps.
@@ -67,4 +74,4 @@ Native text is used when a page has text operators. Image-only pages are rasteri
 
 Default storage is `storage/reports/` (gitignored). Provenance is written next to each PDF as `{sha256}.pdf.json`. Optional live Google dumps go only under `evidence/live-payloads/` (gitignored).
 
-Access notes and PDF hashes: `evidence/01-report-retrieval/`. Reading evidence: `evidence/02-report-reading/`. Google Finance notices, mappings, inventory, and checks: `evidence/03-google-overview/`. The Saudi Exchange site is not a documented public reports API. From some networks, `urllib` with `Accept: */*` succeeds while `curl` receives Akamai 403.
+Access notes and PDF hashes: `evidence/01-report-retrieval/`. Reading evidence: `evidence/02-report-reading/`. Google Finance notices, mappings, inventory, and checks: `evidence/03-google-overview/`. Earnings/financials coverage and PDF cross-checks: `evidence/04-google-financials/`. The Saudi Exchange site is not a documented public reports API. From some networks, `urllib` with `Accept: */*` succeeds while `curl` receives Akamai 403.

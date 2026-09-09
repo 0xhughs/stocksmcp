@@ -8,6 +8,8 @@ from saudi_exchange_reports.cli import main
 from saudi_exchange_reports.google_finance.source import ScriptedSource
 from tests.google_fixtures import (
     dataset_response,
+    earnings_payload,
+    financials_payload,
     fixture_quote_page,
     news_payload,
     overview_card_payload,
@@ -25,6 +27,8 @@ def scripted(monkeypatch):
         overview_card=dataset_response(overview_card_payload()),
         news=dataset_response(news_payload()),
         profile=dataset_response(profile_payload()),
+        earnings=dataset_response(earnings_payload()),
+        financials=dataset_response(financials_payload()),
         mapping_html={("2222", "TADAWUL"): ARAMCO_HTML, ("1211", "TADAWUL"): MAADEN_HTML},
     )
     monkeypatch.setattr(
@@ -67,3 +71,35 @@ def test_cli_resolve_includes_quote_id(capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["google"]["quote_id"] == "2222:TADAWUL"
     assert payload["google"]["verified"] is True
+
+
+def test_cli_google_earnings_json(scripted, capsys):
+    assert main(["google-earnings", "ARAMCO", "--format", "json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["identity"]["ticker"] == "2222"
+    assert payload["periods"]
+    actual = payload["periods"][0]["revenue_actual"]
+    assert actual["kind"] == "actual"
+    assert "ds:" not in json.dumps(payload)
+
+
+def test_cli_google_financials_json(scripted, capsys):
+    assert main(["google-financials", "ARAMCO", "--statement", "income", "--frequency", "quarterly"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["statement"] == "income_statement"
+    assert any(row["label"] == "Revenue" for p in payload["periods"] for row in p["rows"])
+
+
+def test_cli_google_coverage_json(scripted, capsys):
+    assert main(["google-coverage", "ARAMCO"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    ids = {g["id"] for g in payload["gap_classes"]}
+    assert "avgo_enricher_not_used" in ids
+    assert any(s["section"] == "earnings" for s in payload["sections"])
+
+
+def test_cli_google_crosscheck_json(scripted, capsys):
+    assert main(["google-crosscheck", "ARAMCO", "--facts", "fixture"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["google_is_not_audited"] is True
+    assert any(p["pdf_label"] == "Revenue" for p in payload["pairs"])
