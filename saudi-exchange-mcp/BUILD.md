@@ -46,17 +46,17 @@ Creates local company/report metadata, downloaded PDFs, provenance/version recor
 Not completed yet. Pack preparation checks are not implementation proof.
 
 ## Review
-Pending plan review.
-Plan approval: none
+Plan review complete.
+Plan approval: APPROVE_PLAN disp-01-plan-001 reviewer=bc-cb10cee8-f0bc-56df-ba45-4799c6c98d0b (Cursor Grok 4.6) contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 blockers=none artifact=loop/manifests/disp-01-plan-001-result.md
 Implementation approval: none
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Reviewer / plan-review
-Dispatch ID / launch state / input identity: disp-01-plan-001 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6
-Pending result / last consumed dispatch: none
+Worker / role / phase: none
+Dispatch ID / launch state / input identity: none
+Pending result / last consumed dispatch: none / disp-01-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
 Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` with sorted relative paths, SHA-256 file bytes, types, executable modes, and symlink targets. Includes source, tests, configuration, lockfiles, protocol files, loop identity tools, and non-secret evidence docs. `BUILD.md` and `SLICES.md` are hashed from their LOOP contract extracts so Proof/Review/Loop-state bookkeeping, Status, Next, run status, release evidence, and Shipped/Now placement do not change snapshot identity.
@@ -68,14 +68,15 @@ Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
 Repair awaiting review: false
-Review events: none
+Review events:
+- event=rev-01-plan-001 dispatch=disp-01-plan-001 phase=plan-review verdict=APPROVE_PLAN reviewer=bc-cb10cee8-f0bc-56df-ba45-4799c6c98d0b contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot_before=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 snapshot_after=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 gaps=none rejection_count=0 no_progress=0 artifact=loop/manifests/disp-01-plan-001-result.md
 Budget limit / consumed / measurement: Not configured; no execution budget was supplied
 Blocker / resume status / resume action / recheck condition / deadline: none
 Advance phase: none
 Next slice ID / draft: none
 
 ## Status
-Proposed
+Not started
 
 ## Next
-Independent plan review is pending launch for dispatch `disp-01-plan-001`. Do not implement before a valid APPROVE_PLAN verdict.
+Dispatch Builder implementation for slice 01 against the approved plan and baseline. Do not change contract criteria.
