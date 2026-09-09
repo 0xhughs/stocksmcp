@@ -2,7 +2,7 @@
 
 Status: active
 
-Current slice: 02 — Read financial reports with page-level evidence
+Current slice: 03 — Google Finance overview, profile, and news (draft pending)
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 on branch `cursor/hybrid-mcp-pilot-6492`
-Do next: independent implementation review `disp-02-impl-review-001` of candidate sha256:2b288e8d….
-Temporary note: pytest 94 passed via `.venv`. System python3 lacks pillow/pdfplumber.
+Do next: Builder draft-proposal `disp-03-draft-001` (no code). Slices 01–02 are Shipped.
+Temporary note: BUILD.md is still the slice 02 receipt until replaced by the slice 03 Proposed page.

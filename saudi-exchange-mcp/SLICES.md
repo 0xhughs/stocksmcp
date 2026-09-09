@@ -67,15 +67,16 @@ Release review events / last consumed dispatch: none
 
 ## Shipped
 - 01 — Company report discovery and original-PDF retrieval — accepted archive: [slices/01-report-retrieval.md](slices/01-report-retrieval.md). Implementation approval disp-01-impl-review-002, contract sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91, candidate sha256:e68c89956ab1f6f6e3dfb7039faea45e1e3fee82ed91aa3d4d028c6b158358fe.
+- 02 — Read financial reports with page-level evidence — accepted archive: [slices/02-report-reading.md](slices/02-report-reading.md). Implementation approval disp-02-impl-review-001, contract sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc, candidate sha256:2b288e8d6bad89c4e30336461f5a0066c2812d09edda26a1fb90873b675deaed.
 
 ## Now
-### 02 — Read financial reports with page-level evidence
-Goal: make downloaded reports searchable/readable as text and tables, retaining PDF page provenance and financial metadata.
-Provides: Arabic/English extraction, OCR fallback where needed, uncertain/missing-data handling, and representative checks of values, units, periods, and restatements.
-Depends on: 01.
+### 03 — Google Finance overview, profile, and news
+Goal: reuse the existing Google Finance MCP code for a verified Saudi-company overview with quotes/statistics, profile/about, and relevant news through shared company identity.
+Provides: inspected/revision-pinned integration, preserved notices, verified ticker/exchange mappings, live Aramco coverage, quote/freshness metadata, news publisher/link/time, profile fields, and public-section coverage inventory. Use synthetic fixtures and transient live checks; hide changing source dataset details behind clear capabilities.
+Depends on: 01 for shared identity; report extraction in 02 is not a technical dependency.
 Target membership: inside Hybrid Pilot v0.
-Out: quote retrieval, MCP host wiring, investment advice, universal automatic financial-statement normalization.
-Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/02-report-reading.md` (not created yet).
+Out: financial-table parsing in 04, report parsing, private accounts, persistent Google payload archives, hosted service, streaming/polling, trading, and silent source substitution.
+Contract: draft pending; live BUILD remains the slice 02 Shipped receipt until the slice 03 Proposed page replaces it.
 
 ## Later
 ### 01 — Company report discovery and original-PDF retrieval (accepted)
@@ -86,12 +87,13 @@ Target membership: inside Hybrid Pilot v0.
 Out: content interpretation, Google Finance quote integration, MCP host wiring, market-wide collection.
 Contract: accepted archive [slices/01-report-retrieval.md](slices/01-report-retrieval.md).
 
-### 03 — Google Finance overview, profile, and news
-Goal: reuse the existing Google Finance MCP code for a verified Saudi-company overview with quotes/statistics, profile/about, and relevant news through shared company identity.
-Provides: inspected/revision-pinned integration, preserved notices, verified ticker/exchange mappings, live Aramco coverage, quote/freshness metadata, news publisher/link/time, profile fields, and public-section coverage inventory. Use synthetic fixtures and transient live checks; hide changing source dataset details behind clear capabilities.
-Depends on: 01 for shared identity; report extraction in 02 is not a technical dependency.
+### 02 — Read financial reports with page-level evidence (accepted)
+Goal: make downloaded reports searchable/readable as text and tables, retaining PDF page provenance and financial metadata.
+Provides: Arabic/English extraction, OCR fallback where needed, uncertain/missing-data handling, and representative checks of values, units, periods, and restatements.
+Depends on: 01.
 Target membership: inside Hybrid Pilot v0.
-Out: financial-table parsing in 04, report parsing, private accounts, persistent Google payload archives, hosted service, streaming/polling, trading, and silent source substitution.
+Out: quote retrieval, MCP host wiring, investment advice, universal automatic financial-statement normalization.
+Contract: accepted archive [slices/02-report-reading.md](slices/02-report-reading.md).
 
 ### 04 — Google Finance earnings and financial statements
 Goal: retrieve and interpret the available earnings, income-statement, balance-sheet, and cash-flow datasets for Saudi companies through the reused integration.
