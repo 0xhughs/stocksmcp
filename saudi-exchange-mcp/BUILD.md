@@ -58,17 +58,17 @@ Creates derived extraction artifacts (per-page text, optional tables, metadata r
 Pending Builder implementation after plan approval. Slice 01 retrieval of the Maaden 2025 annual English FS is a dependency, not extraction proof. Do not treat `inspect_pdf_identity` or early-page previews as D1–D7.
 
 ## Review
-Pending independent plan review. No APPROVE_PLAN for this contract yet.
-Plan approval: none
+Plan review complete.
+Plan approval: APPROVE_PLAN disp-02-plan-001 reviewer=bc-5e87338b-b2c6-5129-bb8a-e8e41b35789c (Cursor Grok 4.6) contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc snapshot=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d blockers=none artifact=loop/manifests/disp-02-plan-001-result.md
 Implementation approval: none
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Reviewer / plan-review
-Dispatch ID / launch state / input identity: disp-02-plan-001 / pending-launch / contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc snapshot=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d
-Pending result / last consumed dispatch: none / disp-02-draft-001
+Worker / role / phase: pending / Builder / Building
+Dispatch ID / launch state / input identity: disp-02-impl-001 / pending-launch / contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc baseline=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d
+Pending result / last consumed dispatch: none / disp-02-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
 Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` with sorted relative paths, SHA-256 file bytes, types, executable modes, and symlink targets. Includes source, tests, configuration, lockfiles, protocol files, loop identity tools, and non-secret evidence docs. `BUILD.md` and `SLICES.md` are hashed from their LOOP contract extracts so Proof/Review/Loop-state bookkeeping, Status, Next, run status, release evidence, and Shipped/Now placement do not change snapshot identity.
@@ -80,14 +80,15 @@ Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
 Repair awaiting review: false
-Review events: none
+Review events:
+- event=rev-02-plan-001 dispatch=disp-02-plan-001 phase=plan-review verdict=APPROVE_PLAN reviewer=bc-5e87338b-b2c6-5129-bb8a-e8e41b35789c contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc snapshot_before=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d snapshot_after=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d gaps=none rejection_count=0 no_progress=0 artifact=loop/manifests/disp-02-plan-001-result.md
 Budget limit / consumed / measurement: Not configured; no execution budget was supplied
 Blocker / resume status / resume action / recheck condition / deadline: none
 Advance phase: proposed; awaiting plan review
 Next slice ID / draft: 02 — Read financial reports with page-level evidence / loop/manifests/disp-02-draft-001.md
 
 ## Status
-Proposed
+Not started
 
 ## Next
-Independent plan review. Do not implement until APPROVE_PLAN for matching contract and baseline identities.
+Builder implementation pending launch for `disp-02-impl-001`. Plan approval is valid for the recorded contract and baseline.
