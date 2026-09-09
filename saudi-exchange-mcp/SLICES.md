@@ -80,7 +80,7 @@ Provides: host installation, clear tool contracts/descriptions, broad-company, t
 Depends on: 01, 02, 03, and 04.
 Target membership: inside Hybrid Pilot v0; final target slice.
 Out: deployment, public multi-user service, continuous monitoring, trading, or treating pilot coverage as full-market coverage.
-Contract: draft pending; live BUILD remains the slice 04 Shipped receipt until the slice 05 Proposed page replaces it.
+Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/05-hybrid-mcp.md` (not created yet).
 
 ## Later
 ### 01 — Company report discovery and original-PDF retrieval (accepted)
