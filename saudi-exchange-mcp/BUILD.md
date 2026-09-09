@@ -54,8 +54,8 @@ Each result records dispatch ID, reviewer identity, verdict, contract identity, 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: none
-Dispatch ID / launch state / input identity: none
+Worker / role / phase: pending / Builder / draft-proposal
+Dispatch ID / launch state / input identity: disp-02-draft-001 / pending-launch / next_slice=02
 Pending result / last consumed dispatch: none / disp-01-impl-review-002
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
