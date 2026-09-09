@@ -74,11 +74,11 @@ Review events:
 - event=rev-01-impl-002 dispatch=disp-01-impl-review-002 phase=implementation-review verdict=APPROVE_IMPLEMENTATION reviewer=bc-96fe6aac-6713-5d45-94a2-8b89225d20d4 contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot_before=sha256:e68c89956ab1f6f6e3dfb7039faea45e1e3fee82ed91aa3d4d028c6b158358fe snapshot_after=sha256:e68c89956ab1f6f6e3dfb7039faea45e1e3fee82ed91aa3d4d028c6b158358fe gaps=none rejection_count=1 no_progress=0 material_improvement=yes artifact=loop/manifests/disp-01-impl-review-002-result.md
 Budget limit / consumed / measurement: Not configured; no execution budget was supplied
 Blocker / resume status / resume action / recheck condition / deadline: none
-Advance phase: archive written; next selected
+Advance phase: archive pending
 Next slice ID / draft: 02 — Read financial reports with page-level evidence / pending Builder draft
 
 ## Status
 Shipped
 
 ## Next
-Dispatch Builder draft-proposal `disp-02-draft-001` for slice 02 (no code edits). After the draft is persisted, replace BUILD with the slice 02 Proposed page and zeroed counters. Plan review is required before slice 02 code.
+Archive accepted BUILD to `slices/01-report-retrieval.md`, add slice 01 to SLICES Shipped, then draft slice 02. No worker may write application code during advance.

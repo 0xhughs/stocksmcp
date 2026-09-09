@@ -66,24 +66,25 @@ Pending release result: none
 Release review events / last consumed dispatch: none
 
 ## Shipped
-- (none)
+- 01 — Company report discovery and original-PDF retrieval — accepted archive: [slices/01-report-retrieval.md](slices/01-report-retrieval.md). Implementation approval disp-01-impl-review-002, contract sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91, candidate sha256:e68c89956ab1f6f6e3dfb7039faea45e1e3fee82ed91aa3d4d028c6b158358fe.
 
 ## Now
-### 01 — Company report discovery and original-PDF retrieval
-Goal: turn a company name/ticker and report period into a verified original financial-report PDF with provenance.
-Provides: shared company identity with distinct source identifiers, observed Saudi retrieval route, documented pilot coverage, report selection, bounded local PDF download/cache, and real-report evidence.
-Depends on: none; execution authority and target confirmation are recorded.
-Target membership: inside Hybrid Pilot v0.
-Out: content interpretation, Google Finance quote integration, MCP host wiring, market-wide collection.
-Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/01-report-retrieval.md` (not created yet).
-
-## Later
 ### 02 — Read financial reports with page-level evidence
 Goal: make downloaded reports searchable/readable as text and tables, retaining PDF page provenance and financial metadata.
 Provides: Arabic/English extraction, OCR fallback where needed, uncertain/missing-data handling, and representative checks of values, units, periods, and restatements.
 Depends on: 01.
 Target membership: inside Hybrid Pilot v0.
 Out: quote retrieval, MCP host wiring, investment advice, universal automatic financial-statement normalization.
+Contract: draft pending; live BUILD remains the slice 01 Shipped receipt until the slice 02 Proposed page replaces it after archive verification.
+
+## Later
+### 01 — Company report discovery and original-PDF retrieval (accepted)
+Goal: turn a company name/ticker and report period into a verified original financial-report PDF with provenance.
+Provides: shared company identity with distinct source identifiers, observed Saudi retrieval route, documented pilot coverage, report selection, bounded local PDF download/cache, and real-report evidence.
+Depends on: none; execution authority and target confirmation are recorded.
+Target membership: inside Hybrid Pilot v0.
+Out: content interpretation, Google Finance quote integration, MCP host wiring, market-wide collection.
+Contract: accepted archive [slices/01-report-retrieval.md](slices/01-report-retrieval.md).
 
 ### 03 — Google Finance overview, profile, and news
 Goal: reuse the existing Google Finance MCP code for a verified Saudi-company overview with quotes/statistics, profile/about, and relevant news through shared company identity.
