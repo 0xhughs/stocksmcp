@@ -75,7 +75,7 @@ Provides: Arabic/English extraction, OCR fallback where needed, uncertain/missin
 Depends on: 01.
 Target membership: inside Hybrid Pilot v0.
 Out: quote retrieval, MCP host wiring, investment advice, universal automatic financial-statement normalization.
-Contract: draft pending; live BUILD remains the slice 01 Shipped receipt until the slice 02 Proposed page replaces it after archive verification.
+Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/02-report-reading.md` (not created yet).
 
 ## Later
 ### 01 — Company report discovery and original-PDF retrieval (accepted)
