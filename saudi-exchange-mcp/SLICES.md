@@ -71,14 +71,16 @@ Release review events / last consumed dispatch: none
 
 - 03 — Google Finance overview, profile, and news — accepted archive: [slices/03-google-overview.md](slices/03-google-overview.md). Implementation approval disp-03-impl-review-001, contract sha256:b522f4b19a789dcacf99aebdfe72d36e5cabd5ef70e7bd874407f599751e9576, candidate sha256:17b18ff14d853aef4eae735ec45700222eb13c01eddd0063642d1f47eb4a481c.
 
+- 04 — Google Finance earnings and financial statements — accepted archive: [slices/04-google-financials.md](slices/04-google-financials.md). Implementation approval disp-04-impl-review-001, contract sha256:97f9abe0ef503d05119497d8d10ffc182a183fbe56d690a5681a199232feda91, candidate sha256:bb6fd783940ad104932c4345411c449f28131f21b11f88624dee2d1da02b6352.
+
 ## Now
-### 04 — Google Finance earnings and financial statements
-Goal: retrieve and interpret the available earnings, income-statement, balance-sheet, and cash-flow datasets for Saudi companies through the reused integration.
-Provides: verified field meanings and actual-versus-estimate labels, annual/quarterly periods where available, units/currency, original labels/values, explicit coverage/gaps, and meaningful comparisons. Prove representative figures against source displays and official PDFs; document missing history and discrepancies rather than guessing field positions or combining incompatible data.
-Depends on: 03 for the Google integration and 02 for original-report cross-check evidence.
-Target membership: inside Hybrid Pilot v0.
-Out: representing Google tables as audited PDF originals, exhaustive coverage claims, invented figures, unrelated AI chat/account functions, or persistent Google response warehousing.
-Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/04-google-financials.md` (not created yet).
+### 05 — One MCP for company research and official reports
+Goal: expose shared lookup, overview/quotes, news, profile/about, earnings, income statement/balance sheet/cash flow, and original-report retrieval/reading through one MCP connection, with correct source selection and cited answers.
+Provides: host installation, clear tool contracts/descriptions, broad-company, targeted-section, official-report, and combined prompt demonstrations, separate provenance, explicit partial-source failures, pilot end-to-end proof, and final release verification. The host assistant composes analysis; a separate server-side model is not required.
+Depends on: 01, 02, 03, and 04.
+Target membership: inside Hybrid Pilot v0; final target slice.
+Out: deployment, public multi-user service, continuous monitoring, trading, or treating pilot coverage as full-market coverage.
+Contract: draft pending; live BUILD remains the slice 04 Shipped receipt until the slice 05 Proposed page replaces it.
 
 ## Later
 ### 01 — Company report discovery and original-PDF retrieval (accepted)
@@ -105,12 +107,13 @@ Target membership: inside Hybrid Pilot v0.
 Out: financial-table parsing in 04, report parsing, private accounts, persistent Google payload archives, hosted service, streaming/polling, trading, and silent source substitution.
 Contract: accepted archive [slices/03-google-overview.md](slices/03-google-overview.md).
 
-### 05 — One MCP for company research and official reports
-Goal: expose shared lookup, overview/quotes, news, profile/about, earnings, income statement/balance sheet/cash flow, and original-report retrieval/reading through one MCP connection, with correct source selection and cited answers.
-Provides: host installation, clear tool contracts/descriptions, broad-company, targeted-section, official-report, and combined prompt demonstrations, separate provenance, explicit partial-source failures, pilot end-to-end proof, and final release verification. The host assistant composes analysis; a separate server-side model is not required.
-Depends on: 01, 02, 03, and 04.
-Target membership: inside Hybrid Pilot v0; final target slice.
-Out: deployment, public multi-user service, continuous monitoring, trading, or treating pilot coverage as full-market coverage.
+### 04 — Google Finance earnings and financial statements (accepted)
+Goal: retrieve and interpret the available earnings, income-statement, balance-sheet, and cash-flow datasets for Saudi companies through the reused integration.
+Provides: verified field meanings and actual-versus-estimate labels, annual/quarterly periods where available, units/currency, original labels/values, explicit coverage/gaps, and meaningful comparisons. Prove representative figures against source displays and official PDFs; document missing history and discrepancies rather than guessing field positions or combining incompatible data.
+Depends on: 03 for the Google integration and 02 for original-report cross-check evidence.
+Target membership: inside Hybrid Pilot v0.
+Out: representing Google tables as audited PDF originals, exhaustive coverage claims, invented figures, unrelated AI chat/account functions, or persistent Google response warehousing.
+Contract: accepted archive [slices/04-google-financials.md](slices/04-google-financials.md).
 
 ### Future consideration — Broader company and historical coverage
 Goal: extend beyond the pilot if later requested and access/reliability evidence supports it.
