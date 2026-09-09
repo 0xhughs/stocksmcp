@@ -1,6 +1,6 @@
 # Live retrieval log
 
-Date: 2026-09-09 UTC. Working directory: `/workspace/saudi-exchange-mcp`. Environment: Python 3.12, venv `.venv`, `PYTHONPATH=src`. PDFs stay under `storage/` (gitignored) and are not redistributed here.
+Date: 2026-09-09 UTC. Working directory: `/workspace/saudi-exchange-mcp`. Environment: Python 3.12, venv `.venv`, `PYTHONPATH=src`, Playwright 1.62 + system Google Chrome. PDFs stay under `storage/` (gitignored) and are not redistributed here.
 
 ## Commands
 
@@ -11,32 +11,22 @@ PYTHONPATH=src python3 -m saudi_exchange_reports resolve --ticker 2222
 PYTHONPATH=src python3 -m saudi_exchange_reports resolve --name 'Saudi Arabian'
 ```
 
-Listing + retrieve by period (live tab unavailable):
+Listing + retrieve by period (browser-driven tab after urllib `statementsTabData` HTTP 500):
 
 ```bash
 PYTHONPATH=src python3 -m saudi_exchange_reports retrieve \
   --ticker 1211 --period 2025 --type annual --language en \
-  --storage storage/reports --interval 0
+  --storage storage/reports --interval 1.0
 ```
 
-Original PDF (known `/Resources/fsPdf/` URL on the verified host):
+Original PDF by known URL (does **not** satisfy D3; kept only as the earlier Integrated Report object):
 
 ```bash
 PYTHONPATH=src python3 -m saudi_exchange_reports retrieve-url \
   --ticker 1211 \
   --url 'https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf' \
   --period 2025 --type annual --language en \
-  --title 'Maaden financial statements / annual report (English, source filename 370_0_2026-03-29)' \
   --storage storage/reports --interval 1.0
-```
-
-Repeat (cache):
-
-```bash
-PYTHONPATH=src python3 -m saudi_exchange_reports retrieve-url \
-  --ticker 1211 \
-  --url 'https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf' \
-  --period 2025 --type annual --language en --storage storage/reports --interval 0
 ```
 
 ## Results
@@ -48,49 +38,57 @@ PYTHONPATH=src python3 -m saudi_exchange_reports retrieve-url \
 
 ### Live listing (Maaden 1211)
 
-Exit code 1. Listing:
+`list_reports_from_source(..., use_browser=True)` and CLI `retrieve` (browser fallback default):
 
-- `unavailable: true`
-- `count: 0`
+- `unavailable: false`
+- `count: 44` (`22` English from `locale=en`, `22` Arabic from `locale=ar`)
 - `from_cache: false`
-- Reason includes: static profile HTML has no `/Resources/fsPdf/` links; **website `statementsTabData` GET returned HTTP 500** (not an official API).
-- Selection was also `unavailable` with that listing reason (not treated as “period 2025 missing from a complete index”).
+- Reason: listed from **browser-driven Financial Statements tab HTML** on Saudi Exchange (website UI, not an official API). urllib `statementsTabData` GET still HTTP **500** `CWSRV0295E` in the same run.
+- Observed types on the table: **annual** (8), **interim** Q1/Q2/Q3 (28), **other** board reports (8). Q4 cells were dashes (no PDF). ESG cells were empty.
+- Row dump: `evidence/01-report-retrieval/live-listing.json` (source-observed `/Resources/fsPdf/` URLs only).
 
-### Live PDF — success
+Selection checks on that listing (no invented names):
 
-First `retrieve-url` (2026-09-09T20:36:56+00:00):
+| Request | Status | Source URL |
+|---|---|---|
+| 2025 annual en | selected | `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_En.pdf` |
+| 2025 annual ar | selected | `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_Ar.pdf` |
+| 2025 Q3 interim en | selected | `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-11-11_15-02-50_En.pdf` |
+| 2025 Q3 interim ar | selected | `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-11-11_15-02-50_Ar.pdf` |
+
+Aramco `2222` browser listing in the same environment: **44** `/Resources/fsPdf/` rows, issuer `1541`, English+Arabic. Example annual 2025 en: `https://www.saudiexchange.sa/Resources/fsPdf/1541_0_2026-03-10_08-18-44_En.pdf`. No Aramco PDF downloaded.
+
+### Live PDF via discovery — success
+
+CLI `retrieve --ticker 1211 --period 2025 --type annual --language en` (2026-09-09T21:03:04+00:00):
 
 | Field | Value |
 |---|---|
+| selection | `selected` from the 44-row live listing |
+| source URL | `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_En.pdf` |
 | status | `downloaded` |
 | HTTP | 200, `Content-Type: application/pdf` |
-| magic | `%PDF-1.6` |
-| bytes | 10216122 |
-| content_hash | `dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6` |
-| etag | `"9be2ba-64e29266f7779"` |
-| source/final URL | `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf` |
-| local_path | `storage/reports/1211/dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6.pdf` |
-| sidecar | `storage/reports/1211/dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6.pdf.json` |
+| magic | `%PDF-1.7` |
+| bytes | 8681557 |
+| content_hash | `d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e` |
+| local_path | `storage/reports/1211/d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e.pdf` |
+| sidecar | `storage/reports/1211/d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e.pdf.json` |
 | ticker / company_id | `1211` / `sa-tdwl-1211` |
-| page_count | 216 |
+| page_count | 126 |
+| identity_confirmed | true |
+| period_confirmed | true |
 
-Page inspection (first pages only; not full extraction):
+Early-page text (bounded inspection, not full extraction): **SAUDI ARABIAN MINING COMPANY (MAADEN)** / **Consolidated financial statements for the year ended 31 December 2025**.
 
-- Page 1: `INTEGRATED REPORT 2025` / `Unearth Tomorrow` (period **2025**; company name not on the cover).
-- Page 3: `Maaden — Integrated Report 2025`, `MAADEN`, “About Maaden…”.
-- Bounded library inspection after cache hit: `identity_confirmed=true`, `period_confirmed=true`.
+This is the Financial Statements **Annual** cell for 2025, not the Board Report PDF `370_0_2026-03-29_11-05-45_En.pdf` (Integrated Report 2025) previously fetched with `retrieve-url`.
 
-Second `retrieve-url`: `status=cache_hit`, same hash, no second copy. Reason states this is **not** a fresh source check. `revalidate` would GET again and compare hashes (unit-tested; not a live restatement).
+### Prior retrieve-url object (not D3)
 
-### Access header check (same URL, same hour)
-
-- urllib `User-Agent` only → **403**
-- urllib `User-Agent` + `Accept: */*` → **200** `%PDF-`
-- curl HTTP/1.1 from this IP → **403** Akamai Access Denied
+Maaden Integrated Report 2025: `370_0_2026-03-29_11-05-45_En.pdf`, SHA-256 `dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6`, 10,216,122 bytes, 216 pages. Live listing types this URL as **other** (Board Report / 2025). Repeat `retrieve-url` remains `cache_hit`.
 
 ## What was not retrieved
 
-- No Aramco financial-report PDF (no live `fsPdf` URL).
-- No Arabic-language Maaden PDF (`…_Ar.pdf` not requested without a listed URL).
-- No interim PDF from the live tab.
+- No Aramco PDF downloaded (listing only).
+- No Arabic PDF downloaded (Arabic rows were listed and selectable; English annual was the retrieve demonstration).
+- No interim PDF downloaded (Q1/Q2/Q3 rows were listed and selectable).
 - PDF corpus is not committed.

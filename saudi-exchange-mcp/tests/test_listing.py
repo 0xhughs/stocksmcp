@@ -148,6 +148,88 @@ def test_statements_index_url_from_profile_shell():
     assert url.startswith("https://www.saudiexchange.sa/")
 
 
+def test_live_matrix_table_uses_column_year_and_row_type():
+    """Live tab is a year-column matrix with empty (SVG) link text, not the fixture list shape."""
+    html = (FIXTURES / "maaden_live_matrix.html").read_text(encoding="utf-8")
+    reports = parse_report_index_html(html, company=MAADEN)
+    by_url = {r.source_url.split("/")[-1]: r for r in reports}
+    assert "370_0_2026-03-11_15-58-59_En.pdf" in by_url
+    annual = by_url["370_0_2026-03-11_15-58-59_En.pdf"]
+    assert annual.period == "2025"
+    assert annual.report_type is ReportType.ANNUAL
+    assert annual.language == "en"
+    assert annual.publication_date == "2026-03-11"
+    q3 = by_url["370_0_2025-11-11_15-02-50_En.pdf"]
+    assert q3.period == "2025 Q3"
+    assert q3.report_type is ReportType.INTERIM
+    q1 = by_url["370_0_2025-05-13_16-13-00_En.pdf"]
+    assert q1.period == "2025 Q1"
+    assert q1.report_type is ReportType.INTERIM
+    board = by_url["370_0_2026-03-29_11-05-45_En.pdf"]
+    assert board.report_type is ReportType.OTHER
+    assert board.period == "2025"
+    selected = select_report(
+        reports, period="2025", report_type=ReportType.ANNUAL, language="en"
+    )
+    assert selected.status == "selected"
+    assert selected.report is not None
+    assert selected.report.source_url.endswith("370_0_2026-03-11_15-58-59_En.pdf")
+
+
+def test_concatenated_en_and_ar_matrices_select_by_language():
+    html_en = (FIXTURES / "maaden_live_matrix.html").read_text(encoding="utf-8")
+    html_ar = html_en.replace("_En.pdf", "_Ar.pdf")
+    reports = parse_report_index_html(html_en + html_ar, company=MAADEN)
+    langs = {r.language for r in reports}
+    assert langs == {"en", "ar"}
+    selected = select_report(
+        reports, period="2025", report_type=ReportType.ANNUAL, language="ar"
+    )
+    assert selected.status == "selected"
+    assert selected.report is not None
+    assert selected.report.language == "ar"
+    assert selected.report.source_url.endswith("370_0_2026-03-11_15-58-59_Ar.pdf")
+
+
+def test_arabic_matrix_after_english_esg_section_stays_annual():
+    html = """
+    <html><table>
+      <tr><th>ESG Report</th></tr>
+      <tr><td>ESG Report</td>
+          <td><a href="/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf"></a></td></tr>
+    </table></html>
+    <html><table>
+      <thead>
+        <tr><th colspan="2">القوائم المالية</th></tr>
+        <tr><th></th><th>2025</th></tr>
+      </thead>
+      <tr>
+        <td>سنوي</td>
+        <td>
+          <a href="/Resources/fsPdf/370_0_2026-03-11_15-58-59_Ar.pdf" class="btn-pdf"></a>
+          <p>2026-03-11</p>
+        </td>
+      </tr>
+      <tr>
+        <td>الربع الثالث</td>
+        <td>
+          <a href="/Resources/fsPdf/370_0_2025-11-11_15-02-50_Ar.pdf" class="btn-pdf"></a>
+          <p>2025-11-12</p>
+        </td>
+      </tr>
+    </table></html>
+    """
+    reports = parse_report_index_html(html, company=MAADEN)
+    by_url = {r.source_url.split("/")[-1]: r for r in reports}
+    annual = by_url["370_0_2026-03-11_15-58-59_Ar.pdf"]
+    assert annual.report_type is ReportType.ANNUAL
+    assert annual.period == "2025"
+    assert annual.language == "ar"
+    q3 = by_url["370_0_2025-11-11_15-02-50_Ar.pdf"]
+    assert q3.report_type is ReportType.INTERIM
+    assert q3.period == "2025 Q3"
+
+
 def test_statements_index_url_rejects_javascript_and_offhost():
     from saudi_exchange_reports.listing import statements_index_url
 

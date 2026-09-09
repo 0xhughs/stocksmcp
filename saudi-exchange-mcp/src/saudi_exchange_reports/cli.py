@@ -43,6 +43,11 @@ def main(argv: list[str] | None = None) -> int:
     retrieve_p.add_argument("--storage", default="storage/reports")
     retrieve_p.add_argument("--revalidate", action="store_true")
     retrieve_p.add_argument("--interval", type=float, default=1.0)
+    retrieve_p.add_argument(
+        "--no-browser",
+        action="store_true",
+        help="Do not fall back to browser-driven Financial Statements tab listing.",
+    )
 
     url_p = sub.add_parser(
         "retrieve-url",
@@ -150,6 +155,7 @@ def main(argv: list[str] | None = None) -> int:
             transport=UrllibTransport(),
             revalidate=args.revalidate,
             min_interval_seconds=args.interval,
+            use_browser=not args.no_browser,
         )
     except RetrievalError as exc:
         json.dump(

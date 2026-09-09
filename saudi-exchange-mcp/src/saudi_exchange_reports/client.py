@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Protocol
 
+from saudi_exchange_reports.browser_tab import PlaywrightTabRenderer
 from saudi_exchange_reports.errors import BlockedAccess, DownloadFailed
 from saudi_exchange_reports.http import Pacing, Transport, UrllibTransport, get_with_retries, host_allowed
 from saudi_exchange_reports.identity import resolve_company
@@ -14,6 +16,12 @@ from saudi_exchange_reports.retrieval import RetrievalResult, retrieve_report
 from saudi_exchange_reports.storage import company_dir
 
 LISTING_CACHE_NAME = "listing-cache.json"
+
+
+class TabHtmlRenderer(Protocol):
+    """Return untrusted HTML for the Financial Statements tab from a public page."""
+
+    def fetch_tab_html(self, profile_url: str, *, symbol: str) -> str: ...
 
 
 def _utcnow() -> str:
@@ -82,6 +90,8 @@ def list_reports_from_source(
     min_interval_seconds: float = 1.0,
     max_retries: int = 3,
     retry_backoff_seconds: float = 0.5,
+    tab_renderer: TabHtmlRenderer | None = None,
+    use_browser: bool = False,
 ) -> ReportListing:
     """Always hit the source. A saved listing is never proof that no newer report exists."""
     html, final_url = fetch_profile_html(
@@ -135,6 +145,49 @@ def list_reports_from_source(
                     )
         else:
             tab_reason = " No statementsTabData URL could be derived from the profile HTML."
+    if listing.unavailable:
+        renderer = tab_renderer
+        if renderer is None and use_browser:
+            renderer = PlaywrightTabRenderer()
+        if renderer is not None:
+            try:
+                browser_html = renderer.fetch_tab_html(
+                    company.saudi_exchange.profile_url,
+                    symbol=company.saudi_exchange.company_symbol,
+                )
+            except (BlockedAccess, DownloadFailed) as exc:
+                tab_reason += f" Browser-driven tab listing failed: {exc}"
+            except Exception as exc:  # noqa: BLE001 — listing stays unavailable
+                tab_reason += f" Browser-driven tab listing failed: {exc}"
+            else:
+                listing = list_reports(
+                    company,
+                    html=browser_html,
+                    source_url=company.saudi_exchange.profile_url,
+                    from_cache=False,
+                    retrieved_at=_utcnow(),
+                )
+                html = browser_html
+                final_url = company.saudi_exchange.profile_url
+                if listing.unavailable:
+                    tab_reason += (
+                        " Browser-driven Financial Statements tab HTML contained "
+                        "no /Resources/fsPdf/ links."
+                    )
+                else:
+                    listing = ReportListing(
+                        reports=listing.reports,
+                        from_cache=False,
+                        retrieved_at=listing.retrieved_at,
+                        unavailable=False,
+                        reason=(
+                            "Listed reports from browser-driven Financial Statements "
+                            "tab HTML on Saudi Exchange (website UI, not an official API)."
+                            + tab_reason
+                        ),
+                        source_url=listing.source_url or final_url,
+                    )
+                    tab_reason = ""
     if storage_root is not None:
         cdir = company_dir(storage_root, company.ticker)
         payload = {
@@ -197,6 +250,8 @@ def resolve_and_retrieve(
     transport: Transport | None = None,
     revalidate: bool = False,
     min_interval_seconds: float = 1.0,
+    tab_renderer: TabHtmlRenderer | None = None,
+    use_browser: bool = False,
 ) -> tuple[ReportSelection, RetrievalResult | None, ReportListing | None, str]:
     resolved = resolve_company(name=name, ticker=ticker)
     if resolved.status.value != "matched" or resolved.company is None:
@@ -217,6 +272,8 @@ def resolve_and_retrieve(
         transport,
         storage_root=storage_root,
         min_interval_seconds=min_interval_seconds,
+        tab_renderer=tab_renderer,
+        use_browser=use_browser,
     )
     if listing.unavailable:
         return (

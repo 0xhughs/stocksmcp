@@ -7,6 +7,9 @@ Install (local venv):
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
+# Live listing fallback uses system Chrome via Playwright (optional extra):
+# .venv/bin/pip install 'playwright>=1.40'
+
 ```
 
 Tests (no live website):
@@ -29,8 +32,8 @@ PYTHONPATH=src python3 -m saudi_exchange_reports retrieve-url \
   --storage storage/reports
 ```
 
-`retrieve` always re-fetches the company profile (a cached listing is not proof that no newer report exists). If the Financial Statements tab AJAX fails, listing is **unavailable** — use `retrieve-url` only with a known `/Resources/fsPdf/` URL on `www.saudiexchange.sa`.
+`retrieve` always re-fetches the company profile (a cached listing is not proof that no newer report exists). If urllib `statementsTabData` returns HTTP 500, `retrieve` falls back to **browser-driven** Financial Statements tab HTML on `www.saudiexchange.sa` (Playwright + Chrome; not an official API) and then downloads the selected `/Resources/fsPdf/` object with urllib. Use `--no-browser` to skip that fallback. `retrieve-url` still requires a known host URL and does not invent filenames.
 
 Default storage is `storage/reports/` (gitignored). Provenance is written next to each PDF as `{sha256}.pdf.json`.
 
-Access notes and the live PDF hash: `evidence/01-report-retrieval/`. The site is not a documented public reports API. From some networks, `urllib` with `Accept: */*` succeeds while `curl` receives Akamai 403.
+Access notes, the live listing dump, and PDF hashes: `evidence/01-report-retrieval/`. The site is not a documented public reports API. From some networks, `urllib` with `Accept: */*` succeeds while `curl` receives Akamai 403.

@@ -50,8 +50,28 @@ _LANG_FROM_TEXT = {
 }
 
 _ANNUAL_WORDS = ("annual", "year", "fy", "سنوي")
-_INTERIM_WORDS = ("interim", "quarter", "q1", "q2", "q3", "q4", "نصف", "ربع", "أولي")
-_OTHER_SECTIONS = ("board report", "esg report", "sustainability")
+_INTERIM_WORDS = ("interim", "quarter", "q1", "q2", "q3", "q4", "نصف", "ربع", "أولي", "الربع")
+_OTHER_SECTIONS = ("board report", "esg report", "sustainability", "تقرير مجلس", "مجلس الإدارة")
+
+_SECTION_NAMES = {
+    "financial statements": "Financial Statements",
+    "القوائم المالية": "Financial Statements",
+    "xbrl": "XBRL",
+    "board report": "Board Report",
+    "تقرير مجلس الإدارة": "Board Report",
+    "esg report": "ESG Report",
+}
+
+_QUARTER_LABELS = {
+    "q1": "1",
+    "q2": "2",
+    "q3": "3",
+    "q4": "4",
+    "الربع الأول": "1",
+    "الربع الثاني": "2",
+    "الربع الثالث": "3",
+    "الربع الرابع": "4",
+}
 
 
 class _AnchorCollector(HTMLParser):
@@ -68,37 +88,50 @@ class _AnchorCollector(HTMLParser):
         self._row_hrefs: list[str] = []
         self.row_links: list[list[tuple[str, str]]] = []
         self._row_link_buf: list[tuple[str, str]] = []
+        self._cell_links: list[tuple[str, str]] = []
+        self._row_cell_links: list[list[tuple[str, str]]] = []
+        self.row_cell_links: list[list[list[tuple[str, str]]]] = []
         self._current_section = "Financial Statements"
         self.sections_by_row: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         ad = {k: v or "" for k, v in attrs}
-        if tag == "a":
+        if tag == "html":
+            self._current_section = "Financial Statements"
+        elif tag == "a":
             self._current_href = ad.get("href") or None
             self._current_text = []
         elif tag == "tr":
             self._row = []
             self._row_link_buf = []
+            self._row_cell_links = []
         elif tag == "th":
             self._in_th = True
             self._cell_text = []
+            self._cell_links = []
         elif tag == "td":
             self._in_td = True
             self._cell_text = []
+            self._cell_links = []
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "a" and self._current_href:
             text = " ".join(self._current_text).strip()
             self.anchors.append((self._current_href, text))
             self._row_link_buf.append((self._current_href, text))
+            self._cell_links.append((self._current_href, text))
             self._current_href = None
             self._current_text = []
         elif tag in {"td", "th"}:
             text = " ".join(self._cell_text).strip()
             self._row.append(text)
+            self._row_cell_links.append(list(self._cell_links))
             if tag == "th":
                 lowered = text.casefold()
-                if lowered in {
+                mapped = _section_from_heading(text)
+                if mapped:
+                    self._current_section = mapped
+                elif lowered in {
                     "financial statements",
                     "xbrl",
                     "board report",
@@ -109,10 +142,12 @@ class _AnchorCollector(HTMLParser):
             self._in_td = False
             self._in_th = False
             self._cell_text = []
+            self._cell_links = []
         elif tag == "tr":
             if self._row or self._row_link_buf:
                 self.rows.append(self._row)
                 self.row_links.append(self._row_link_buf)
+                self.row_cell_links.append(self._row_cell_links)
                 self.sections_by_row.append(self._current_section)
 
     def handle_data(self, data: str) -> None:
@@ -227,6 +262,49 @@ def _language_from(href: str, link_text: str) -> str:
     return "und"
 
 
+def _section_from_heading(text: str) -> str | None:
+    folded = " ".join(text.split())
+    lowered = folded.casefold()
+    if lowered == "financial statements and reports" or "القوائم المالية والتقارير" in folded:
+        return None
+    if folded in _SECTION_NAMES:
+        return _SECTION_NAMES[folded]
+    if lowered in _SECTION_NAMES:
+        return _SECTION_NAMES[lowered]
+    for needle, name in _SECTION_NAMES.items():
+        if needle in lowered or needle in folded:
+            return name
+    return None
+
+
+def _row_quarter(label: str) -> str | None:
+    text = " ".join((label or "").split())
+    match = re.fullmatch(r"Q\s*([1-4])", text, re.I)
+    if match:
+        return match.group(1)
+    folded = text.casefold()
+    for needle, quarter in _QUARTER_LABELS.items():
+        if folded == needle or text == needle:
+            return quarter
+    for needle, quarter in _QUARTER_LABELS.items():
+        if needle in folded or needle in text:
+            return quarter
+    return None
+
+
+def _period_from_matrix(row_label: str, column_year: str | None, cells: list[str], href: str) -> str:
+    year = (column_year or "").strip()
+    quarter = _row_quarter(row_label)
+    if not re.fullmatch(r"20\d{2}", year):
+        base = _period_from_row(cells, href)
+        if quarter and re.fullmatch(r"20\d{2}", base):
+            return f"{base} Q{quarter}"
+        return base
+    if quarter:
+        return f"{year} Q{quarter}"
+    return year
+
+
 def _period_from_row(cells: list[str], href: str) -> str:
     for cell in cells:
         if re.fullmatch(r"\d{4}", cell.strip()):
@@ -293,22 +371,54 @@ def _title_from(section: str, cells: list[str], report_type: ReportType, languag
     return f"{section} {type_label} {period} ({lang_label})"
 
 
+def _year_columns(cells: list[str], cell_links: list[list[tuple[str, str]]]) -> list[str] | None:
+    years = [c.strip() for c in cells if re.fullmatch(r"20\d{2}", c.strip())]
+    if len(years) < 1:
+        return None
+    if any(cell_links):
+        return None
+    return [c.strip() if re.fullmatch(r"20\d{2}", c.strip()) else "" for c in cells]
+
+
 def parse_report_index_html(html: str, company: CompanyIdentity) -> tuple[FinancialReport, ...]:
     """Parse untrusted HTML as data. Never execute it."""
     parser = _AnchorCollector()
     parser.feed(html)
     reports: list[FinancialReport] = []
     seen: set[str] = set()
-    for cells, links, section in zip(parser.rows, parser.row_links, parser.sections_by_row, strict=False):
-        for href, text in links:
+    year_cols: list[str] | None = None
+    for cells, links, section, cell_links in zip(
+        parser.rows,
+        parser.row_links,
+        parser.sections_by_row,
+        parser.row_cell_links,
+        strict=False,
+    ):
+        detected = _year_columns(cells, cell_links or [])
+        if detected is not None:
+            year_cols = detected
+            continue
+        row_label = cells[0] if cells else ""
+        items: list[tuple[str, str, str | None, str]] = []
+        if cell_links:
+            for index, (cell_text, cell_hrefs) in enumerate(zip(cells, cell_links, strict=False)):
+                column_year = year_cols[index] if year_cols and index < len(year_cols) else None
+                for href, text in cell_hrefs:
+                    items.append((href, text, column_year, cell_text))
+        else:
+            joined = " ".join(cells)
+            items = [(href, text, None, joined) for href, text in links]
+        for href, text, column_year, cell_text in items:
             url = _absolute_fs_url(href)
             if not url or url in seen:
                 continue
             seen.add(url)
             language = _language_from(url, text)
-            period = _period_from_row(cells, url)
-            pub, pub_missing = _publication_date(cells, url)
-            report_type = _type_from(section, cells, url)
+            period = _period_from_matrix(row_label, column_year, cells, url)
+            pub, pub_missing = _publication_date([cell_text], url)
+            if pub_missing:
+                pub, pub_missing = _publication_date(cells, url)
+            report_type = _type_from(section, [row_label, cell_text, *cells], url)
             reports.append(
                 FinancialReport(
                     title=_title_from(section, cells, report_type, language, period),
