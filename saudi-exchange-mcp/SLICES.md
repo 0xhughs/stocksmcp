@@ -76,7 +76,7 @@ Provides: inspected/revision-pinned integration, preserved notices, verified tic
 Depends on: 01 for shared identity; report extraction in 02 is not a technical dependency.
 Target membership: inside Hybrid Pilot v0.
 Out: financial-table parsing in 04, report parsing, private accounts, persistent Google payload archives, hosted service, streaming/polling, trading, and silent source substitution.
-Contract: draft pending; live BUILD remains the slice 02 Shipped receipt until the slice 03 Proposed page replaces it.
+Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/03-google-overview.md` (not created yet).
 
 ## Later
 ### 01 — Company report discovery and original-PDF retrieval (accepted)
