@@ -48,15 +48,15 @@ Proposed by Builder disp-01-impl-001 (not independently accepted). Slice 01 libr
 ## Review
 Plan review complete.
 Plan approval: APPROVE_PLAN disp-01-plan-001 reviewer=bc-cb10cee8-f0bc-56df-ba45-4799c6c98d0b (Cursor Grok 4.6) contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 blockers=none artifact=loop/manifests/disp-01-plan-001-result.md
-Implementation approval: none — pending independent review disp-01-impl-review-001
+Implementation approval: none — REJECT_IMPLEMENTATION disp-01-impl-review-001
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Reviewer / implementation-review
-Dispatch ID / launch state / input identity: disp-01-impl-review-001 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 baseline=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 candidate=sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae
-Pending result / last consumed dispatch: none / disp-01-plan-001
+Worker / role / phase: pending / Builder / Building
+Dispatch ID / launch state / input identity: disp-01-impl-002 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 baseline=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 prior_candidate=sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae
+Pending result / last consumed dispatch: none / disp-01-impl-review-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
 Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` with sorted relative paths, SHA-256 file bytes, types, executable modes, and symlink targets. Includes source, tests, configuration, lockfiles, protocol files, loop identity tools, and non-secret evidence docs. `BUILD.md` and `SLICES.md` are hashed from their LOOP contract extracts so Proof/Review/Loop-state bookkeeping, Status, Next, run status, release evidence, and Shipped/Now placement do not change snapshot identity.
@@ -64,19 +64,20 @@ Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/
 Baseline snapshot: sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 file_count=10 path=loop/manifests/snapshot.json
 Contract identity: sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 path=loop/manifests/contract.json
 Candidate snapshot: sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae file_count=38 path=loop/manifests/candidate.json builder=bc-73c1d3c3-fe64-5262-9e93-fdd26650f641
-Rejection count: 0
+Rejection count: 1
 Consecutive no-progress repairs: 0
-Open acceptance gaps / prior failing evidence: none
+Open acceptance gaps / prior failing evidence: D3 live report selection — list_reports_from_source unavailable (statementsTabData HTTP 500 CWSRV0295E); no source-observed fsPdf rows; retrieve --period cannot select; live PDF used retrieve-url of a pre-known object, not a reports-table link; annual/interim/language listing fixture-only. Evidence: loop/manifests/disp-01-impl-review-001-result.md; live list empty; pytest 50 passed does not cover this gap.
 Repair awaiting review: false
 Review events:
 - event=rev-01-plan-001 dispatch=disp-01-plan-001 phase=plan-review verdict=APPROVE_PLAN reviewer=bc-cb10cee8-f0bc-56df-ba45-4799c6c98d0b contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot_before=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 snapshot_after=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 gaps=none rejection_count=0 no_progress=0 artifact=loop/manifests/disp-01-plan-001-result.md
+- event=rev-01-impl-001 dispatch=disp-01-impl-review-001 phase=implementation-review verdict=REJECT_IMPLEMENTATION reviewer=bc-d9884a95-f472-502f-aeca-466f1ea709d4 contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot_before=sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae snapshot_after=sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae gaps=D3-live-listing-and-period-selection rejection_count=1 no_progress=0 artifact=loop/manifests/disp-01-impl-review-001-result.md
 Budget limit / consumed / measurement: Not configured; no execution budget was supplied
 Blocker / resume status / resume action / recheck condition / deadline: none
 Advance phase: none
 Next slice ID / draft: none
 
 ## Status
-Ready for review
+Building
 
 ## Next
-Independent implementation review pending launch for `disp-01-impl-review-001`. Do not mark Shipped without APPROVE_IMPLEMENTATION.
+Builder repair `disp-01-impl-002` against D3 live listing/selection. Rejection count 1/3. Do not mark Shipped.
