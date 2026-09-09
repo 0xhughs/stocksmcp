@@ -9,11 +9,17 @@ from pathlib import Path
 
 from saudi_exchange_reports.client import resolve_and_retrieve
 from saudi_exchange_reports.errors import InvalidPdf, RetrievalError, UnsafeDestination
+from saudi_exchange_reports.google_finance.service import get_inventory, get_news, get_overview, get_profile
 from saudi_exchange_reports.http import UrllibTransport
 from saudi_exchange_reports.identity import resolve_company
 from saudi_exchange_reports.listing import ReportType
 from saudi_exchange_reports.reading import extract_report, parse_page_spec, read_pages, search_extracted
 from saudi_exchange_reports.retrieval import retrieve_from_url
+
+
+def google_source_from_args(_args: argparse.Namespace):
+    """Hook for tests to inject ScriptedSource. Default is live client."""
+    return None
 
 
 def _report_type(value: str) -> ReportType:
@@ -96,6 +102,17 @@ def main(argv: list[str] | None = None) -> int:
     resolve_p.add_argument("--ticker")
     resolve_p.add_argument("--exchange")
     resolve_p.add_argument("query", nargs="?")
+    resolve_p.add_argument("--format", choices=("json", "text"), default="json")
+
+    for google_cmd, help_text in (
+        ("google-overview", "Google Finance overview/quote for a pilot company."),
+        ("google-news", "Google Finance security news for a pilot company."),
+        ("google-profile", "Google Finance profile/about for a pilot company."),
+        ("google-inventory", "Inventory of Google Finance quote-page sections."),
+    ):
+        gp = sub.add_parser(google_cmd, help=help_text)
+        gp.add_argument("query")
+        gp.add_argument("--format", choices=("json", "text"), default="json")
 
     retrieve_p = sub.add_parser("retrieve", help="List and download a report PDF.")
     retrieve_p.add_argument("--name")
@@ -148,8 +165,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd in {"extract", "read", "search"}:
         return _reading_command(args)
 
+    if args.cmd in {"google-overview", "google-news", "google-profile", "google-inventory"}:
+        return _google_command(args)
+
     if args.cmd == "resolve":
         result = resolve_company(args.query, name=args.name, ticker=args.ticker, exchange=args.exchange)
+        google = None
+        if result.company is not None:
+            gf = result.company.google_finance
+            google = {
+                "quote_symbol": gf.quote_symbol,
+                "exchange": gf.exchange,
+                "quote_id": gf.quote_id,
+                "quote_url": gf.quote_url,
+                "verified": gf.verified,
+            }
         payload = {
             "status": result.status.value,
             "reason": result.reason,
@@ -167,11 +197,9 @@ def main(argv: list[str] | None = None) -> int:
                     "market": result.company.saudi_exchange.market,
                     "issuer_id": result.company.saudi_exchange.issuer_id,
                 },
-                "google_finance": {
-                    "quote_symbol": result.company.google_finance.quote_symbol,
-                    "verified": result.company.google_finance.verified,
-                },
+                "google_finance": google,
             },
+            "google": google,
             "candidates": [c.ticker for c in result.candidates],
         }
         json.dump(payload, sys.stdout, ensure_ascii=False, indent=2)
@@ -296,6 +324,26 @@ def main(argv: list[str] | None = None) -> int:
     if retrieval and retrieval.status in {"downloaded", "cache_hit", "updated"}:
         return 0
     return 1
+
+
+def _google_command(args: argparse.Namespace) -> int:
+    source = google_source_from_args(args)
+    try:
+        if args.cmd == "google-overview":
+            result = get_overview(args.query, source=source)
+        elif args.cmd == "google-news":
+            result = get_news(args.query, source=source)
+        elif args.cmd == "google-profile":
+            result = get_profile(args.query, source=source)
+        else:
+            result = get_inventory(args.query, source=source)
+    except ValueError as exc:
+        json.dump({"status": "failed", "reason": str(exc)}, sys.stdout, indent=2)
+        sys.stdout.write("\n")
+        return 2
+    json.dump(result.to_dict(), sys.stdout, ensure_ascii=False, indent=2)
+    sys.stdout.write("\n")
+    return 0
 
 
 if __name__ == "__main__":

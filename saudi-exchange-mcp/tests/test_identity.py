@@ -1,7 +1,7 @@
 """D2: Arabic/English/ticker resolution for the documented pilot sample.
 
-Expected outcomes are independent of HTTP. Google Finance mapping is a
-placeholder slot only — this slice does not validate Google identifiers.
+Google Finance quote identifiers are attached to the existing identities
+(not a second company table). Network is not required for these lookups.
 """
 
 from __future__ import annotations
@@ -21,7 +21,11 @@ def test_resolve_ticker_2222_to_aramco():
     assert result.company.saudi_exchange.company_symbol == "2222"
     assert result.company.saudi_exchange.market == "Main Market"
     assert result.company.google_finance is not None
-    assert result.company.google_finance.verified is False
+    assert result.company.company_id == "sa-tdwl-2222"
+    assert result.company.google_finance.quote_symbol == "2222"
+    assert result.company.google_finance.exchange == "TADAWUL"
+    assert result.company.google_finance.quote_id == "2222:TADAWUL"
+    assert result.company.google_finance.verified is True
 
 
 def test_resolve_english_name_saudi_aramco():
@@ -53,6 +57,9 @@ def test_resolve_second_pilot_company_maaden_ticker():
     assert "mining" in result.company.english_name.lower()
     assert result.company.saudi_exchange.company_symbol == "1211"
     assert result.company.company_id != resolve_company(ticker="2222").company.company_id
+    assert result.company.company_id == "sa-tdwl-1211"
+    assert result.company.google_finance.quote_id == "1211:TADAWUL"
+    assert result.company.google_finance.verified is True
 
 
 def test_resolve_maaden_english_and_short_name():
@@ -123,9 +130,14 @@ def test_source_identifiers_stay_distinct_from_google_slot():
     assert company.saudi_exchange.company_symbol == "2222"
     assert "companySymbol=2222" in company.saudi_exchange.profile_url
     assert "saudiexchange.sa" in company.saudi_exchange.profile_url
-    # Placeholder for slice 03 — must exist and must not be claimed verified.
     assert hasattr(company.google_finance, "quote_symbol")
-    assert company.google_finance.verified is False
+    assert company.google_finance.quote_id == "2222:TADAWUL"
+    assert company.google_finance.verified is True
+    assert "SAU" not in (company.google_finance.quote_id or "")
+    maaden = resolve_company(ticker="1211").company
+    assert maaden.google_finance.quote_id == "1211:TADAWUL"
+    assert maaden.google_finance.verified is True
+    assert maaden.google_finance.quote_id != "1211:SAU"
 
 
 def test_query_string_dispatch_uses_ticker_when_all_digits():

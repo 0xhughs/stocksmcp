@@ -2,7 +2,7 @@
 
 Names, tickers, markets, and profile URLs below were observed on
 https://www.saudiexchange.sa company-profile pages on 2026-09-09.
-Google Finance mappings are unverified placeholders.
+Google Finance mappings are verified Tadawul quote identifiers (slice 03).
 """
 
 from __future__ import annotations
@@ -51,7 +51,13 @@ ARAMCO = CompanyIdentity(
         # Observed on the Aramco company profile: /Resources/pdfs/1541_ByLaw1.pdf
         issuer_id="1541",
     ),
-    google_finance=GoogleFinanceMapping(quote_symbol=None, verified=False),
+    google_finance=GoogleFinanceMapping(
+        quote_symbol="2222",
+        exchange="TADAWUL",
+        quote_id="2222:TADAWUL",
+        quote_url="https://www.google.com/finance/quote/2222:TADAWUL",
+        verified=True,
+    ),
 )
 
 MAADEN = CompanyIdentity(
@@ -76,7 +82,13 @@ MAADEN = CompanyIdentity(
         # https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf
         issuer_id="370",
     ),
-    google_finance=GoogleFinanceMapping(quote_symbol=None, verified=False),
+    google_finance=GoogleFinanceMapping(
+        quote_symbol="1211",
+        exchange="TADAWUL",
+        quote_id="1211:TADAWUL",
+        quote_url="https://www.google.com/finance/quote/1211:TADAWUL",
+        verified=True,
+    ),
 )
 
 PILOT_COMPANIES: tuple[CompanyIdentity, ...] = (ARAMCO, MAADEN)

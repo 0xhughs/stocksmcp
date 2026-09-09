@@ -33,9 +33,12 @@ class SaudiExchangeIdentifiers:
 
 @dataclass(frozen=True)
 class GoogleFinanceMapping:
-    """Placeholder slot for slice 03. Not validated in slice 01."""
+    """Google Finance quote identifiers attached to a shared company identity."""
 
     quote_symbol: str | None = None
+    exchange: str | None = None
+    quote_id: str | None = None
+    quote_url: str | None = None
     verified: bool = False
 
 

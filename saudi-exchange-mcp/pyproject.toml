@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "saudi-exchange-reports"
 version = "0.1.0"
-description = "Saudi Exchange company identity, report listing, original-PDF retrieval, and page-level reading (Hybrid MCP slices 01–02)."
+description = "Saudi Exchange company identity, report listing, original-PDF retrieval, page-level reading, and Google Finance overview/news/profile (Hybrid MCP slices 01–03)."
 requires-python = ">=3.12"
 dependencies = [
   "pypdf>=5.0",
@@ -13,6 +13,8 @@ dependencies = [
   "pytesseract>=0.3.13",
   "pdf2image>=1.17",
   "pdfplumber>=0.11",
+  "httpx>=0.27",
+  "anyio>=4.0",
 ]
 
 [project.optional-dependencies]
@@ -31,4 +33,5 @@ pythonpath = ["src", "tests"]
 addopts = "-q"
 markers = [
   "stored_pdf: tests that require a gitignored stored original PDF",
+  "live_google: hits Google Finance over the network; skipped unless --live-google or SAUDI_LIVE_GOOGLE=1",
 ]
