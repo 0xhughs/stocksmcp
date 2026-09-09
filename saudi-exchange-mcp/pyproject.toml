@@ -5,14 +5,18 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "saudi-exchange-reports"
 version = "0.1.0"
-description = "Saudi Exchange company identity, report listing, and original-PDF retrieval (Hybrid MCP slice 01)."
+description = "Saudi Exchange company identity, report listing, original-PDF retrieval, and page-level reading (Hybrid MCP slices 01–02)."
 requires-python = ">=3.12"
 dependencies = [
   "pypdf>=5.0",
+  "pillow>=10.0",
+  "pytesseract>=0.3.13",
+  "pdf2image>=1.17",
+  "pdfplumber>=0.11",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "reportlab>=4.0"]
 browser = ["playwright>=1.40"]
 
 [project.scripts]
@@ -25,3 +29,6 @@ where = ["src"]
 testpaths = ["tests"]
 pythonpath = ["src", "tests"]
 addopts = "-q"
+markers = [
+  "stored_pdf: tests that require a gitignored stored original PDF",
+]

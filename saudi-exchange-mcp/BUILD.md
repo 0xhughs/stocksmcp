@@ -55,19 +55,19 @@ Creates derived extraction artifacts (per-page text, optional tables, metadata r
 - D7: Reviewer runs `PYTHONPATH=src python3 -m pytest tests/ -q` (including new slice 02 tests) and audits that live/stored evidence is labelled separately from fixtures. Slice 01 tests remain passing.
 
 ## Proof
-Pending Builder implementation after plan approval. Slice 01 retrieval of the Maaden 2025 annual English FS is a dependency, not extraction proof. Do not treat `inspect_pdf_identity` or early-page previews as D1–D7.
+Proposed by Builder disp-02-impl-001 (not independently accepted). Slice 02 extends `saudi_exchange_reports` with `extract_report` / `read_pages` / `search_extracted` / `find_line_item` and CLI `extract` / `read` / `search`. Every span/cell records content hash, local path, 1-based PDF page index, and method (`native` / `ocr` / `mixed` / `unreadable`). Original strings are kept. Native text when letter-bearing operators exist; otherwise local Tesseract OCR (`eng+ara`). Unreadable pages are flagged. Metadata is `stated` or `unknown`. Routine proof: `PYTHONPATH=src .venv/bin/python -m pytest tests/ -q` — **94 passed** (coordinator recheck 2026-09-09 with project venv). Stored Maaden 2025 annual English FS: PDF pages 4 and 13–18 OCR; notes page 19 native. Evidence: `evidence/02-report-reading/`. Arabic live PDF not retrieved (fixture-proven). Image-only statements yield OCR spans rather than a full cell grid.
 
 ## Review
 Plan review complete.
 Plan approval: APPROVE_PLAN disp-02-plan-001 reviewer=bc-5e87338b-b2c6-5129-bb8a-e8e41b35789c (Cursor Grok 4.6) contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc snapshot=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d blockers=none artifact=loop/manifests/disp-02-plan-001-result.md
-Implementation approval: none
+Implementation approval: none — pending independent review disp-02-impl-review-001
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Builder / Building
-Dispatch ID / launch state / input identity: disp-02-impl-001 / pending-launch / contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc baseline=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d
+Worker / role / phase: pending / Reviewer / implementation-review
+Dispatch ID / launch state / input identity: disp-02-impl-review-001 / pending-launch / contract=sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc baseline=sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d candidate=sha256:2b288e8d6bad89c4e30336461f5a0066c2812d09edda26a1fb90873b675deaed
 Pending result / last consumed dispatch: none / disp-02-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
@@ -75,7 +75,7 @@ Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` wi
 Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `node_modules/`, `.tox/`, `storage/`, `loop/manifests/`, `evidence/live-payloads/`, `HANDOFF.md`, `*.pyc`, `*.pyo`, `.DS_Store`. Manifests are stored outside their own coverage.
 Baseline snapshot: sha256:9985159d76a5e740748a29f56abc8f19980d6d20ed29b0db7a6f006c0c29012d file_count=42 path=loop/manifests/snapshot.json
 Contract identity: sha256:f8a3e87ed9c9bc004d6b14453ce00803ace0b153d0d5f30214f12ead00faf0fc path=loop/manifests/contract.json
-Candidate snapshot: none
+Candidate snapshot: sha256:2b288e8d6bad89c4e30336461f5a0066c2812d09edda26a1fb90873b675deaed file_count=57 path=loop/manifests/candidate.json builder=bc-a14326d9-b007-532d-be51-182619f68caa
 Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
@@ -88,7 +88,7 @@ Advance phase: proposed; awaiting plan review
 Next slice ID / draft: 02 — Read financial reports with page-level evidence / loop/manifests/disp-02-draft-001.md
 
 ## Status
-Not started
+Ready for review
 
 ## Next
-Builder implementation pending launch for `disp-02-impl-001`. Plan approval is valid for the recorded contract and baseline.
+Independent implementation review pending launch for `disp-02-impl-review-001`. Use project `.venv` for pytest. Do not mark Shipped without APPROVE_IMPLEMENTATION.

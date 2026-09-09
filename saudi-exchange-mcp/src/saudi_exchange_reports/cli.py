@@ -8,10 +8,11 @@ import sys
 from pathlib import Path
 
 from saudi_exchange_reports.client import resolve_and_retrieve
-from saudi_exchange_reports.errors import RetrievalError
+from saudi_exchange_reports.errors import InvalidPdf, RetrievalError, UnsafeDestination
 from saudi_exchange_reports.http import UrllibTransport
 from saudi_exchange_reports.identity import resolve_company
 from saudi_exchange_reports.listing import ReportType
+from saudi_exchange_reports.reading import extract_report, parse_page_spec, read_pages, search_extracted
 from saudi_exchange_reports.retrieval import retrieve_from_url
 
 
@@ -20,6 +21,68 @@ def _report_type(value: str) -> ReportType:
         return ReportType(value)
     except ValueError as exc:
         raise argparse.ArgumentTypeError(f"Unknown report type {value!r}") from exc
+
+
+def _reading_command(args: argparse.Namespace) -> int:
+    storage = Path(args.storage)
+    pdf_path = Path(args.path)
+    page_spec = parse_page_spec(args.pages) if getattr(args, "pages", None) else None
+    try:
+        doc = extract_report(pdf_path, storage_root=storage, pages=page_spec)
+    except (InvalidPdf, UnsafeDestination) as exc:
+        json.dump(
+            {"status": "failed", "error_type": type(exc).__name__, "reason": str(exc)},
+            sys.stdout,
+            indent=2,
+        )
+        sys.stdout.write("\n")
+        return 1
+    if args.cmd == "extract":
+        payload = {"status": "ok", **doc.to_dict()}
+        json.dump(payload, sys.stdout, ensure_ascii=False, indent=2)
+        sys.stdout.write("\n")
+        return 0
+    if args.cmd == "read":
+        start = args.page
+        end = args.page_to if args.page_to is not None else args.page
+        pages = read_pages(doc, start, end)
+        payload = {
+            "status": "ok",
+            "content_hash": doc.content_hash,
+            "local_path": str(doc.local_path),
+            "pages": [
+                {
+                    "page_number": p.page_number,
+                    "method": p.method,
+                    "text": p.text,
+                    "unreadable_reason": p.unreadable_reason,
+                    "content_hash": p.content_hash,
+                }
+                for p in pages
+            ],
+        }
+        json.dump(payload, sys.stdout, ensure_ascii=False, indent=2)
+        sys.stdout.write("\n")
+        return 0
+    result = search_extracted(doc, args.query)
+    payload = {
+        "status": result.status,
+        "query": result.query,
+        "reason": result.reason,
+        "content_hash": doc.content_hash,
+        "hits": [
+            {
+                "original": h.original,
+                "page_number": h.page_number,
+                "content_hash": h.content_hash,
+                "method": h.method,
+            }
+            for h in result.hits
+        ],
+    }
+    json.dump(payload, sys.stdout, ensure_ascii=False, indent=2)
+    sys.stdout.write("\n")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,7 +126,28 @@ def main(argv: list[str] | None = None) -> int:
     url_p.add_argument("--revalidate", action="store_true")
     url_p.add_argument("--interval", type=float, default=1.0)
 
+    extract_p = sub.add_parser("extract", help="Extract text/tables from a stored report PDF.")
+    extract_p.add_argument("--path", required=True)
+    extract_p.add_argument("--storage", default="storage/reports")
+    extract_p.add_argument("--pages", help="1-based PDF pages, e.g. 13-18,19")
+
+    read_p = sub.add_parser("read", help="Read extracted pages of a stored report PDF.")
+    read_p.add_argument("--path", required=True)
+    read_p.add_argument("--storage", default="storage/reports")
+    read_p.add_argument("--page", type=int, required=True)
+    read_p.add_argument("--to", dest="page_to", type=int)
+    read_p.add_argument("--pages", help="Optional extract subset, e.g. 13-18,19")
+
+    search_p = sub.add_parser("search", help="Search extracted text of a stored report PDF.")
+    search_p.add_argument("--path", required=True)
+    search_p.add_argument("--storage", default="storage/reports")
+    search_p.add_argument("--query", required=True)
+    search_p.add_argument("--pages", help="Optional extract subset, e.g. 13-18,19")
+
     args = parser.parse_args(argv)
+    if args.cmd in {"extract", "read", "search"}:
+        return _reading_command(args)
+
     if args.cmd == "resolve":
         result = resolve_company(args.query, name=args.name, ticker=args.ticker, exchange=args.exchange)
         payload = {
