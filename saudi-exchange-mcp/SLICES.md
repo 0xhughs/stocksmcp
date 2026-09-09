@@ -78,7 +78,7 @@ Provides: verified field meanings and actual-versus-estimate labels, annual/quar
 Depends on: 03 for the Google integration and 02 for original-report cross-check evidence.
 Target membership: inside Hybrid Pilot v0.
 Out: representing Google tables as audited PDF originals, exhaustive coverage claims, invented figures, unrelated AI chat/account functions, or persistent Google response warehousing.
-Contract: draft pending; live BUILD remains the slice 03 Shipped receipt until the slice 04 Proposed page replaces it.
+Contract: [BUILD.md](BUILD.md). Future accepted archive: `slices/04-google-financials.md` (not created yet).
 
 ## Later
 ### 01 — Company report discovery and original-PDF retrieval (accepted)
