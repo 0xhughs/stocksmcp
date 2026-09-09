@@ -54,8 +54,8 @@ Each result records dispatch ID, reviewer identity, verdict, contract identity, 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: none
-Dispatch ID / launch state / input identity: none
+Worker / role / phase: pending / Builder / Building
+Dispatch ID / launch state / input identity: disp-01-impl-001 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 baseline=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6
 Pending result / last consumed dispatch: none / disp-01-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
@@ -79,4 +79,4 @@ Next slice ID / draft: none
 Not started
 
 ## Next
-Dispatch Builder implementation for slice 01 against the approved plan and baseline. Do not change contract criteria.
+Builder implementation pending launch for `disp-01-impl-001`. Plan approval is valid for the recorded contract and baseline.
