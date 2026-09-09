@@ -43,19 +43,19 @@ Creates local company/report metadata, downloaded PDFs, provenance/version recor
 - D7: Reviewer reproduces relevant checks, audits sample coverage, and distinguishes live evidence from deterministic simulations. Do not require a live website in every routine test run.
 
 ## Proof
-Not completed yet. Pack preparation checks are not implementation proof.
+Proposed by Builder disp-01-impl-001 (not independently accepted). Slice 01 library `saudi_exchange_reports` resolves a documented two-company Main Market pilot (Saudi Aramco `2222`, Maaden `1211`) from Arabic/English names or tickers to a shared identity with distinct Saudi Exchange identifiers and an unverified Google Finance placeholder. Report listing parses untrusted Financial Statements HTML (annual / interim / other, language, publication date when present) and selects by period/type/language with explicit unavailable/ambiguous outcomes. Original `/Resources/fsPdf/` PDFs download into `storage/reports/` with `%PDF` validation, provenance sidecar, content-hash cache, version preservation, and bounded failures (HTML-as-PDF, partial/failed download, 403, unsafe path, disallowed redirect, 5xx retry). Access evidence dated 2026-09-09 records the Main Market Watch → company-profile → `finacialStatementAndReports` / `statementsTabData` (stmtType=6) website route; that AJAX is not an official API and returned HTTP 500 from this client. A real Maaden English Integrated Report 2025 PDF was retrieved: `https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf`, 10,216,122 bytes, SHA-256 `dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6`, 216 pages, identity/period confirmed on early pages. Routine proof: `PYTHONPATH=src python3 -m pytest tests/ -q` (50 passed, coordinator recheck 2026-09-09). Live commands/results: `evidence/01-report-retrieval/`. Builder-reported unresolved: live listing 500; no Aramco fsPdf URL; PDF obtained via retrieve-url of a known host object rather than a live-populated tab.
 
 ## Review
 Plan review complete.
 Plan approval: APPROVE_PLAN disp-01-plan-001 reviewer=bc-cb10cee8-f0bc-56df-ba45-4799c6c98d0b (Cursor Grok 4.6) contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 snapshot=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 blockers=none artifact=loop/manifests/disp-01-plan-001-result.md
-Implementation approval: none
+Implementation approval: none — pending independent review disp-01-impl-review-001
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Builder / Building
-Dispatch ID / launch state / input identity: disp-01-impl-001 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 baseline=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6
+Worker / role / phase: pending / Reviewer / implementation-review
+Dispatch ID / launch state / input identity: disp-01-impl-review-001 / pending-launch / contract=sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 baseline=sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 candidate=sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae
 Pending result / last consumed dispatch: none / disp-01-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
@@ -63,7 +63,7 @@ Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` wi
 Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `node_modules/`, `.tox/`, `storage/`, `loop/manifests/`, `evidence/live-payloads/`, `HANDOFF.md`, `*.pyc`, `*.pyo`, `.DS_Store`. Manifests are stored outside their own coverage.
 Baseline snapshot: sha256:9f10bc6eeaacaae72f6f57994a8abd9ee29f577e1abf45a8561159d46743e2a6 file_count=10 path=loop/manifests/snapshot.json
 Contract identity: sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91 path=loop/manifests/contract.json
-Candidate snapshot: none
+Candidate snapshot: sha256:d903b340bbb9bc3ea22f90794c9af06dfff29e8d95ed10e8c5fcb201e43bdaae file_count=38 path=loop/manifests/candidate.json builder=bc-73c1d3c3-fe64-5262-9e93-fdd26650f641
 Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
@@ -76,7 +76,7 @@ Advance phase: none
 Next slice ID / draft: none
 
 ## Status
-Not started
+Ready for review
 
 ## Next
-Builder implementation pending launch for `disp-01-impl-001`. Plan approval is valid for the recorded contract and baseline.
+Independent implementation review pending launch for `disp-01-impl-review-001`. Do not mark Shipped without APPROVE_IMPLEMENTATION.

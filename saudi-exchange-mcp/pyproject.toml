@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saudi-exchange-reports"
+version = "0.1.0"
+description = "Saudi Exchange company identity, report listing, and original-PDF retrieval (Hybrid MCP slice 01)."
+requires-python = ">=3.12"
+dependencies = [
+  "pypdf>=5.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+saudi-exchange-reports = "saudi_exchange_reports.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+addopts = "-q"

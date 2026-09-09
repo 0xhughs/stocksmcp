@@ -1,0 +1,62 @@
+{
+  "observed_at": "2026-09-09",
+  "source": "https://www.saudiexchange.sa",
+  "google_finance_mapping": "placeholder only; verified=false; not validated in slice 01",
+  "pilot_companies": [
+    {
+      "company_id": "sa-tdwl-2222",
+      "ticker": "2222",
+      "english_name": "Saudi Arabian Oil Co.",
+      "english_short": "SAUDI ARAMCO",
+      "arabic_name": "شركة الزيت العربية السعودية",
+      "arabic_short": "أرامكو السعودية",
+      "exchange": "Saudi Exchange Main Market",
+      "market": "Main Market",
+      "sector_observed": "الطاقة (Arabic profile)",
+      "profile_url": "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=2222",
+      "saudi_exchange_issuer_id": "1541",
+      "issuer_id_source": "profile link /Resources/pdfs/1541_ByLaw1.pdf",
+      "financial_report_pdf": null,
+      "financial_report_pdf_note": "No /Resources/fsPdf/ URL was listed from live profile HTML or statementsTabData in this environment. No filename was invented."
+    },
+    {
+      "company_id": "sa-tdwl-1211",
+      "ticker": "1211",
+      "english_name": "Saudi Arabian Mining Co.",
+      "english_short": "MAADEN",
+      "arabic_name": "شركة التعدين العربية السعودية",
+      "arabic_short": "معادن",
+      "exchange": "Saudi Exchange Main Market",
+      "market": "Main Market",
+      "profile_url": "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=1211",
+      "saudi_exchange_issuer_id": "370",
+      "issuer_id_source": "profile link /Resources/pdfs/370_ByLaw2.pdf",
+      "reports": [
+        {
+          "title": "Maaden Integrated Report 2025 (English)",
+          "period": "2025",
+          "report_type": "annual",
+          "language": "en",
+          "publication_date": "2026-03-29",
+          "publication_date_source": "fsPdf filename 370_0_2026-03-29_11-05-45_En.pdf",
+          "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf",
+          "retrieved": true,
+          "listing_from_live_tab": false,
+          "listing_note": "statementsTabData returned HTTP 500; URL confirmed by live GET of the fsPdf object and PDF page text."
+        }
+      ]
+    }
+  ],
+  "identity_cases_in_tests": {
+    "matched": ["2222", "Saudi Aramco", "أرامكو السعودية", "1211", "MAADEN"],
+    "ambiguous": ["Saudi Arabian"],
+    "conflicting": ["name=Saudi Aramco ticker=1211"],
+    "unknown": ["empty query"],
+    "not_found": ["9999", "Definitely Not A Listed Company XYZ"],
+    "wrong_exchange": ["2222 on NASDAQ", "AAPL on NASDAQ"]
+  },
+  "report_type_coverage": {
+    "live": "one English annual/integrated report (Maaden 2025)",
+    "fixtures": "annual, interim, and other (board report) with English/Arabic links in tests/fixtures/maaden_reports.html"
+  }
+}
