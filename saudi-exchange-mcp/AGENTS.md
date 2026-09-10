@@ -1,7 +1,7 @@
 # Saudi Market Hybrid MCP — shared rules
 
 ## Working rules
-- Work only within the active BUILD contract, SLICES Loop target, and actual user authorization. This pack was requested for preparation only; implementation is not authorized by its existence.
+- Work only within the active BUILD contract, SLICES Loop target, and actual user authorization. Execution of Hybrid Pilot v0 through slice 05 was authorized on 2026-09-09; the pack's prior Prepared status does not replace that instruction.
 - Inspect the repository and existing tests before choosing a language, libraries, transport, or retrieval method. Make ordinary reversible implementation choices independently.
 - Coordinator alone writes protocol files and accepted archives. Builder implements and proposes proof. Reviewer verifies independently and never fixes the work it reviews.
 - Never self-approve. Preserve snapshot identities, dispatch ownership, counters, and review events across sessions. Shipped means independently accepted, not deployed or published.

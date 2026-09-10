@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "saudi-exchange": {
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": ["-m", "saudi_exchange_reports.mcp"],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "SAUDI_REPORTS_STORAGE": "${workspaceFolder}/storage/reports"
+      }
+    }
+  }
+}

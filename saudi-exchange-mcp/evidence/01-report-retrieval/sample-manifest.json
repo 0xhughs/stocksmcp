@@ -1,0 +1,78 @@
+{
+  "observed_at": "2026-09-09",
+  "source": "https://www.saudiexchange.sa",
+  "google_finance_mapping": "placeholder only; verified=false; not validated in slice 01",
+  "pilot_companies": [
+    {
+      "company_id": "sa-tdwl-2222",
+      "ticker": "2222",
+      "english_name": "Saudi Arabian Oil Co.",
+      "english_short": "SAUDI ARAMCO",
+      "arabic_name": "شركة الزيت العربية السعودية",
+      "arabic_short": "أرامكو السعودية",
+      "exchange": "Saudi Exchange Main Market",
+      "market": "Main Market",
+      "sector_observed": "الطاقة (Arabic profile)",
+      "profile_url": "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=2222",
+      "saudi_exchange_issuer_id": "1541",
+      "issuer_id_source": "profile link /Resources/pdfs/1541_ByLaw1.pdf",
+      "financial_report_pdf": null,
+      "live_listing_count": 44,
+      "live_listing_note": "Browser-driven Financial Statements tab on 2026-09-09 returned 44 /Resources/fsPdf/ rows (en+ar). Example annual 2025 en: https://www.saudiexchange.sa/Resources/fsPdf/1541_0_2026-03-10_08-18-44_En.pdf. No Aramco PDF was downloaded. No filename was invented."
+    },
+    {
+      "company_id": "sa-tdwl-1211",
+      "ticker": "1211",
+      "english_name": "Saudi Arabian Mining Co.",
+      "arabic_name": "شركة التعدين العربية السعودية",
+      "arabic_short": "معادن",
+      "english_short": "MAADEN",
+      "exchange": "Saudi Exchange Main Market",
+      "market": "Main Market",
+      "profile_url": "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=1211",
+      "saudi_exchange_issuer_id": "370",
+      "issuer_id_source": "profile link /Resources/pdfs/370_ByLaw2.pdf",
+      "live_listing_count": 44,
+      "reports": [
+        {
+          "title": "Financial Statements Annual 2025 (English)",
+          "period": "2025",
+          "report_type": "annual",
+          "language": "en",
+          "publication_date": "2026-03-11",
+          "publication_date_source": "live table cell under year 2025 / Annual",
+          "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_En.pdf",
+          "retrieved": true,
+          "listing_from_live_tab": true,
+          "content_hash": "d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e",
+          "listing_note": "Selected from browser-driven statements table after urllib statementsTabData HTTP 500. CLI retrieve --ticker 1211 --period 2025 --type annual --language en."
+        },
+        {
+          "title": "Board Report / Integrated Report 2025 (English)",
+          "period": "2025",
+          "report_type": "other",
+          "language": "en",
+          "publication_date": "2026-03-29",
+          "publication_date_source": "live Board Report cell under year 2025",
+          "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf",
+          "retrieved": true,
+          "listing_from_live_tab": true,
+          "content_hash": "dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6",
+          "listing_note": "Present on the live Board Report row. Previously downloaded via retrieve-url; live listing now classifies it as other, not the annual financial statements."
+        }
+      ]
+    }
+  ],
+  "identity_cases_in_tests": {
+    "matched": ["2222", "Saudi Aramco", "أرامكو السعودية", "1211", "MAADEN"],
+    "ambiguous": ["Saudi Arabian"],
+    "conflicting": ["name=Saudi Aramco ticker=1211"],
+    "unknown": ["empty query"],
+    "not_found": ["9999", "Definitely Not A Listed Company XYZ"],
+    "wrong_exchange": ["2222 on NASDAQ", "AAPL on NASDAQ"]
+  },
+  "report_type_coverage": {
+    "live": "Maaden and Aramco Financial Statements tables: annual, interim (Q1–Q3), other (board); English and Arabic on separate locale tabs. Maaden 2025 annual English PDF downloaded from the listing.",
+    "fixtures": "annual, interim, and other (board report) with English/Arabic links in tests/fixtures/maaden_reports.html; live matrix shape in tests/fixtures/maaden_live_matrix.html"
+  }
+}

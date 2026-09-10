@@ -1,0 +1,456 @@
+{
+  "observed_at": "2026-09-09T21:08:06+00:00",
+  "company": "1211",
+  "unavailable": false,
+  "count": 44,
+  "reason": "Listed reports from browser-driven Financial Statements tab HTML on Saudi Exchange (website UI, not an official API). Website statementsTabData GET returned HTTP 500 (not an official API; WebSphere AJAX from the profile page).",
+  "source_url": "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=1211",
+  "reports": [
+    {
+      "title": "Financial Statements: Annual - (English)",
+      "period": "2025",
+      "report_type": "annual",
+      "language": "en",
+      "publication_date": "2026-03-11",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Annual - (English)",
+      "period": "2024",
+      "report_type": "annual",
+      "language": "en",
+      "publication_date": "2025-03-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-03-13_13-01-24_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Annual - (English)",
+      "period": "2023",
+      "report_type": "annual",
+      "language": "en",
+      "publication_date": "2024-03-04",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-03-04_14-54-39_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Annual - (English)",
+      "period": "2022",
+      "report_type": "annual",
+      "language": "en",
+      "publication_date": "2023-02-20",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-02-20_13-05-07_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q3 - (English)",
+      "period": "2025 Q3",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2025-11-12",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-11-11_15-02-50_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q3 - (English)",
+      "period": "2024 Q3",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2024-11-11",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-11-11_16-05-03_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q3 - (English)",
+      "period": "2023 Q3",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2023-11-05",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-11-05_12-01-52_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q3 - (English)",
+      "period": "2022 Q3",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2022-11-06",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2022-11-06_09-27-17_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q2 (English)",
+      "period": "2026 Q2",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2026-08-10",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-08-10_15-14-32_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q2 (English)",
+      "period": "2025 Q2",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2025-08-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-08-13_13-39-02_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q2 (English)",
+      "period": "2024 Q2",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2024-08-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-08-13_15-24-34_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q2 (English)",
+      "period": "2023 Q2",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2023-08-15",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-08-15_12-40-25_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q2 (English)",
+      "period": "2022 Q2",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2022-08-16",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2022-08-16_12-14-54_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q1 (English)",
+      "period": "2026 Q1",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2026-05-05",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-05-05_12-18-38_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q1 (English)",
+      "period": "2025 Q1",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2025-05-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-05-13_16-13-00_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q1 (English)",
+      "period": "2024 Q1",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2024-05-16",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-05-16_13-53-57_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q1 (English)",
+      "period": "2023 Q1",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2023-05-24",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-05-24_09-15-08_En.pdf"
+    },
+    {
+      "title": "Financial Statements: Q1 (English)",
+      "period": "2022 Q1",
+      "report_type": "interim",
+      "language": "en",
+      "publication_date": "2022-05-09",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2022-04-29_16-13-14_En.pdf"
+    },
+    {
+      "title": "Board Report: Board Report - (English)",
+      "period": "2025",
+      "report_type": "other",
+      "language": "en",
+      "publication_date": "2026-03-29",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_En.pdf"
+    },
+    {
+      "title": "Board Report: Board Report - (English)",
+      "period": "2024",
+      "report_type": "other",
+      "language": "en",
+      "publication_date": "2025-03-30",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-03-27_19-54-48_En.pdf"
+    },
+    {
+      "title": "Board Report: Board Report - (English)",
+      "period": "2023",
+      "report_type": "other",
+      "language": "en",
+      "publication_date": "2024-03-30",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-03-30_16-41-20_En.pdf"
+    },
+    {
+      "title": "Board Report: Board Report - (English)",
+      "period": "2022",
+      "report_type": "other",
+      "language": "en",
+      "publication_date": "2023-03-02",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-03-02_09-00-12_En.pdf"
+    },
+    {
+      "title": "Financial Statements: سنوي - (Arabic)",
+      "period": "2025",
+      "report_type": "annual",
+      "language": "ar",
+      "publication_date": "2026-03-11",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: سنوي - (Arabic)",
+      "period": "2024",
+      "report_type": "annual",
+      "language": "ar",
+      "publication_date": "2025-03-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-03-13_13-01-24_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: سنوي - (Arabic)",
+      "period": "2023",
+      "report_type": "annual",
+      "language": "ar",
+      "publication_date": "2024-03-04",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-03-04_14-54-39_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: سنوي - (Arabic)",
+      "period": "2022",
+      "report_type": "annual",
+      "language": "ar",
+      "publication_date": "2023-02-20",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-02-20_13-05-07_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثالث - (Arabic)",
+      "period": "2025 Q3",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2025-11-12",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-11-11_15-02-50_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثالث - (Arabic)",
+      "period": "2024 Q3",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2024-11-11",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-11-11_16-05-03_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثالث - (Arabic)",
+      "period": "2023 Q3",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2023-11-05",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-11-05_12-01-52_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثالث - (Arabic)",
+      "period": "2022 Q3",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2022-11-06",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2022-11-06_09-27-17_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثاني (Arabic)",
+      "period": "2026 Q2",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2026-08-10",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-08-10_15-14-32_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثاني (Arabic)",
+      "period": "2025 Q2",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2025-08-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-08-13_13-39-02_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثاني (Arabic)",
+      "period": "2024 Q2",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2024-08-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-08-13_15-24-34_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثاني (Arabic)",
+      "period": "2023 Q2",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2023-08-15",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-08-15_12-40-25_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الثاني (Arabic)",
+      "period": "2022 Q2",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2022-08-16",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2022-08-16_12-14-54_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الأول (Arabic)",
+      "period": "2026 Q1",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2026-05-05",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-05-05_12-18-38_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الأول (Arabic)",
+      "period": "2025 Q1",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2025-05-13",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-05-13_16-13-00_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الأول (Arabic)",
+      "period": "2024 Q1",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2024-05-16",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-05-16_13-53-57_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الأول (Arabic)",
+      "period": "2023 Q1",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2023-05-24",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-05-24_09-15-08_Ar.pdf"
+    },
+    {
+      "title": "Financial Statements: الربع الأول (Arabic)",
+      "period": "2022 Q1",
+      "report_type": "interim",
+      "language": "ar",
+      "publication_date": "2022-05-09",
+      "publication_date_unavailable": false,
+      "section": "Financial Statements",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2022-04-29_16-13-14_Ar.pdf"
+    },
+    {
+      "title": "Board Report: تقرير مجلس الإدارة - (Arabic)",
+      "period": "2025",
+      "report_type": "other",
+      "language": "ar",
+      "publication_date": "2026-03-29",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-29_11-05-45_Ar.pdf"
+    },
+    {
+      "title": "Board Report: تقرير مجلس الإدارة - (Arabic)",
+      "period": "2024",
+      "report_type": "other",
+      "language": "ar",
+      "publication_date": "2025-03-30",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-03-27_19-54-48_Ar.pdf"
+    },
+    {
+      "title": "Board Report: تقرير مجلس الإدارة - (Arabic)",
+      "period": "2023",
+      "report_type": "other",
+      "language": "ar",
+      "publication_date": "2024-03-30",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2024-03-30_16-41-20_Ar.pdf"
+    },
+    {
+      "title": "Board Report: تقرير مجلس الإدارة - (Arabic)",
+      "period": "2022",
+      "report_type": "other",
+      "language": "ar",
+      "publication_date": "2023-03-02",
+      "publication_date_unavailable": false,
+      "section": "Board Report",
+      "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2023-03-02_09-00-12_Ar.pdf"
+    }
+  ],
+  "selection_checks": {
+    "annual_2025_en": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_En.pdf",
+    "annual_2025_ar": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_Ar.pdf",
+    "interim_2025_q3_en": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-11-11_15-02-50_En.pdf",
+    "interim_2025_q3_ar": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2025-11-11_15-02-50_Ar.pdf"
+  }
+}

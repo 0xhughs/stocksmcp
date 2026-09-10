@@ -1,0 +1,85 @@
+{
+  "observed_at": "2026-09-09",
+  "slice": "02-report-reading",
+  "google_finance": "not used; out of slice",
+  "mcp": "not used; out of slice",
+  "fixture_results": {
+    "source": "pytest synthetic PDFs from tests/pdf_fixtures.py; not live filings",
+    "tests": [
+      "tests/test_extraction.py",
+      "tests/test_arabic_english.py",
+      "tests/test_ocr.py",
+      "tests/test_missing_data.py",
+      "tests/test_metadata.py",
+      "tests/test_cli_reading.py"
+    ],
+    "shapes_covered": [
+      "per-page native text with content hash, storage path, 1-based page, method",
+      "table cells with original strings and optional numeric parse; blank is not 0",
+      "Arabic native labels and Arabic OCR (Tesseract ara)",
+      "image-only OCR labelling",
+      "unreadable noise page flagged not omitted",
+      "search miss is not_found, not proof of no activity",
+      "currency/scale/period/duration/quarterly-vs-cumulative/scope/restatement stated or unknown",
+      "negative: IAS 29 restated measuring unit; IFRS 15 standalone selling price; zakat separate financial statements"
+    ]
+  },
+  "stored_pdf_results": {
+    "label": "stored original from slice 01; gitignored; not redistributed",
+    "company": "Saudi Arabian Mining Co. (Maaden)",
+    "ticker": "1211",
+    "report": "Financial Statements Annual 2025 English",
+    "source_url": "https://www.saudiexchange.sa/Resources/fsPdf/370_0_2026-03-11_15-58-59_En.pdf",
+    "content_hash": "d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e",
+    "local_path": "storage/reports/1211/d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e.pdf",
+    "page_count": 126,
+    "not_this_object": {
+      "title": "Board Report / Integrated Report 2025 English",
+      "content_hash": "dae44e050e70e412049516a4caea688f9ff0cd918cab44b393ee86ecaf4b02a6"
+    },
+    "image_only_pages": {
+      "pdf_pages": [4, 13, 14, 15, 16, 17, 18],
+      "method": "ocr",
+      "unreadable": false,
+      "engine": "pdf2image 200dpi + tesseract eng+ara"
+    },
+    "native_notes_example": {
+      "pdf_page": 19,
+      "method": "native",
+      "footer_running_title": "Saudi Arabian Mining Company (Maaden) | 18",
+      "citations": [
+        "Notes to the consolidated financial statements",
+        "for the year ended 31 December 2025",
+        "All amounts in Saudi Riyals unless otherwise stated",
+        "authorized and issued share capital ... Saudi Riyals (“SAR”) 38,887,634,180"
+      ]
+    },
+    "ocr_statement_examples": [
+      {
+        "pdf_page": 13,
+        "heading": "Consolidated statement of profit or loss",
+        "figures": [
+          {"label": "Revenue", "original": "38,577,730,228"},
+          {"label": "Profit for the year", "original": "8,527,980,356"},
+          {"label": "Basic and diluted earnings per share", "original": "1.91"}
+        ]
+      },
+      {
+        "pdf_page": 15,
+        "heading": "Consolidated statement of financial position",
+        "figures": [
+          {"label": "Share capital", "original": "38,887,634,180"}
+        ]
+      }
+    ],
+    "metadata": {
+      "currency": {"status": "stated", "value": "Saudi Riyals (SAR)"},
+      "scale": {"status": "stated", "value": "full riyals (as stated)"},
+      "period": {"status": "stated", "value": "year ended 31 December 2025"},
+      "duration": {"status": "stated", "value": "year"},
+      "scope": {"status": "stated", "value": "consolidated"},
+      "quarterly_vs_cumulative": {"status": "unknown"},
+      "restatement": {"status": "unknown", "note": "page 29 IAS 29 measuring-unit 'restated' is not a comparative restatement"}
+    }
+  }
+}
