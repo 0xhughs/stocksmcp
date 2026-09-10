@@ -1,6 +1,8 @@
-# Saudi Exchange reports (slices 01–04)
+# Saudi Exchange reports (Hybrid Pilot v0)
 
-Python 3.12 library for **pilot** Main Market company identity, report listing, original-PDF retrieval, page-level reading/search, and a **Google Finance** overview/news/profile/earnings/financials client for the same identities. This is **not** an MCP server (host wiring is slice 05). Google Finance reuse is local, personal, and user-initiated; it does not license Google or exchange data. Google tables are not audited Saudi Exchange filings.
+Python 3.12 library and **local stdio MCP server** for **pilot** Main Market company identity, report listing, original-PDF retrieval, page-level reading/search, and a **Google Finance** overview/news/profile/earnings/financials client for the same identities. Google Finance reuse is local, personal, and user-initiated; it does not license Google or exchange data. Google tables are not audited Saudi Exchange filings.
+
+The product MCP process is `python -m saudi_exchange_reports.mcp` (console script `saudi-exchange-mcp`). It is **not** `python -m google_finance_mcp` / `google_finance_mcp.server`. Installing or enabling the server does not run research until the host calls tools.
 
 Install (local venv):
 
@@ -19,6 +21,8 @@ Tests (no live Saudi Exchange website and **no live Google**). Synthetic PDFs, H
 PYTHONPATH=src .venv/bin/python -m pytest tests/ -q
 # opt-in live Aramco Google checks (bodies stay gitignored):
 # SAUDI_LIVE_GOOGLE=1 PYTHONPATH=src .venv/bin/python -m pytest tests/ -m live_google -q
+# opt-in live stdio MCP session (same flag; also --live-mcp):
+# SAUDI_LIVE_GOOGLE=1 PYTHONPATH=src .venv/bin/python -m pytest tests/test_mcp_live.py -q
 ```
 
 CLI (slice 01 retrieval):
@@ -73,5 +77,28 @@ Native text is used when a page has text operators. Image-only pages are rasteri
 `retrieve` always re-fetches the company profile (a cached listing is not proof that no newer report exists). If urllib `statementsTabData` returns HTTP 500, `retrieve` falls back to **browser-driven** Financial Statements tab HTML on `www.saudiexchange.sa` (Playwright + Chrome; not an official API) and then downloads the selected `/Resources/fsPdf/` object with urllib. Use `--no-browser` to skip that fallback. `retrieve-url` still requires a known host URL and does not invent filenames.
 
 Default storage is `storage/reports/` (gitignored). Provenance is written next to each PDF as `{sha256}.pdf.json`. Optional live Google dumps go only under `evidence/live-payloads/` (gitignored).
+
+## Cursor MCP install (stdio, local, not a deployment)
+
+Copy-paste example: `evidence/05-hybrid-mcp/cursor-mcp.json.example`. Put the same object in the project file `.cursor/mcp.json` and/or the user file `~/.cursor/mcp.json`. This is a **local, personal, user-initiated** stdio server. It is not a hosted/multi-user service, not Cursor Marketplace publishing, and not Streamable HTTP/SSE remote deployment.
+
+```json
+{
+  "mcpServers": {
+    "saudi-exchange": {
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": ["-m", "saudi_exchange_reports.mcp"],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "SAUDI_REPORTS_STORAGE": "${workspaceFolder}/storage/reports"
+      }
+    }
+  }
+}
+```
+
+`${workspaceFolder}` interpolation is allowed. Point `command` at this workspace's venv. Optional: `SAUDI_MCP_USE_BROWSER=1` enables the existing Playwright tab fallback for Saudi listing (same as slice 01). Live Google HTTP happens only when a Google tool is called.
+
+MCP session evidence (fixture vs live vs stored-PDF): `evidence/05-hybrid-mcp/`.
 
 Access notes and PDF hashes: `evidence/01-report-retrieval/`. Reading evidence: `evidence/02-report-reading/`. Google Finance notices, mappings, inventory, and checks: `evidence/03-google-overview/`. Earnings/financials coverage and PDF cross-checks: `evidence/04-google-financials/`. The Saudi Exchange site is not a documented public reports API. From some networks, `urllib` with `Accept: */*` succeeds while `curl` receives Akamai 403.

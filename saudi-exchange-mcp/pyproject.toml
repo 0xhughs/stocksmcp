@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "saudi-exchange-reports"
 version = "0.1.0"
-description = "Saudi Exchange company identity, report listing, original-PDF retrieval, page-level reading, and Google Finance overview/news/profile/earnings/financials (Hybrid MCP slices 01–04)."
+description = "Saudi Exchange company identity, report listing, original-PDF retrieval, page-level reading, Google Finance research, and a local stdio MCP server (Hybrid MCP slices 01–05)."
 requires-python = ">=3.12"
 dependencies = [
   "pypdf>=5.0",
@@ -15,6 +15,7 @@ dependencies = [
   "pdfplumber>=0.11",
   "httpx>=0.27",
   "anyio>=4.0",
+  "mcp>=1.30,<2",
 ]
 
 [project.optional-dependencies]
@@ -23,6 +24,7 @@ browser = ["playwright>=1.40"]
 
 [project.scripts]
 saudi-exchange-reports = "saudi_exchange_reports.cli:main"
+saudi-exchange-mcp = "saudi_exchange_reports.mcp:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -34,4 +36,5 @@ addopts = "-q"
 markers = [
   "stored_pdf: tests that require a gitignored stored original PDF",
   "live_google: hits Google Finance over the network; skipped unless --live-google or SAUDI_LIVE_GOOGLE=1",
+  "live_mcp: live stdio MCP session; skipped unless --live-google/--live-mcp or SAUDI_LIVE_GOOGLE=1",
 ]

@@ -131,19 +131,19 @@ Adds an MCP server module, SDK dependency (`mcp` in `pyproject.toml` / `requirem
 - D7: Reviewer runs `PYTHONPATH=src python3 -m pytest tests/ -q` (or project venv) **without** network to Google; live tests skipped by default; stored-PDF skipped if gitignored file missing. Slice 01–04 tests pass. Audit git for live Google bodies. Snapshot commands remain `python3 loop/identity.py snapshot …` as below.
 
 ## Proof
-Placeholder — pending implementation. This document is a Proposed contract only. Draft-time repository inspection (2026-09-09) of slices 01–04 APIs, vendored `google_finance_mcp.server`, MCP 2025-11-25 tools/stdio, and Cursor `mcp.json` stdio install is recorded in Done when / Constraints to specify wrapping and proof; it is **not** slice 05 acceptance evidence.
+Proposed by Builder disp-05-impl-001 (not independently accepted). Product stdio MCP server `python -m saudi_exchange_reports.mcp` wrapping 01–04 APIs (not `google_finance_mcp.server`). Default pytest: 178 passed, 7 skipped (coordinator recheck 2026-09-09). Live one-connection MCP session recorded four prompt classes; live Saudi listing was unavailable in that session; stored Maaden FS was read/searched via MCP. Evidence: `evidence/05-hybrid-mcp/`. Cursor install example only; not deployed.
 
 ## Review
 Plan review complete.
 Plan approval: APPROVE_PLAN disp-05-plan-001 reviewer=bc-77e0572d-cf37-513e-a962-4c16c8137d01 (Cursor Grok 4.6) contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 snapshot=sha256:a99c3c9f3c321c6e3a116c4ffc0ce83e41057efd66503b483544dc88b7b5c8b0 blockers=none artifact=loop/manifests/disp-05-plan-001-result.md
-Implementation approval: none
+Implementation approval: none — pending independent review disp-05-impl-review-001
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Builder / Building
-Dispatch ID / launch state / input identity: disp-05-impl-001 / pending-launch / contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 baseline=sha256:a99c3c9f3c321c6e3a116c4ffc0ce83e41057efd66503b483544dc88b7b5c8b0
+Worker / role / phase: pending / Reviewer / implementation-review
+Dispatch ID / launch state / input identity: disp-05-impl-review-001 / pending-launch / contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 baseline=sha256:a99c3c9f3c321c6e3a116c4ffc0ce83e41057efd66503b483544dc88b7b5c8b0 candidate=sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842
 Pending result / last consumed dispatch: none / disp-05-plan-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
@@ -152,7 +152,7 @@ Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/
 Baseline snapshot: sha256:a99c3c9f3c321c6e3a116c4ffc0ce83e41057efd66503b483544dc88b7b5c8b0 file_count=100 path=loop/manifests/snapshot.json
 Contract identity: sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 path=loop/manifests/contract.json
 Contract identity: sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 path=loop/manifests/contract.json
-Candidate snapshot: none
+Candidate snapshot: sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 file_count=116 path=loop/manifests/candidate.json builder=bc-cc146335-86c4-58e8-840c-bc0c8b627a0e
 Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
@@ -165,7 +165,7 @@ Advance phase: none
 Next slice ID / draft: none
 
 ## Status
-Not started
+Ready for review
 
 ## Next
-Builder implementation pending launch for `disp-05-impl-001`. Plan approval is valid for the recorded contract and baseline. Live MCP-connection proof is required.
+Independent implementation review pending launch for `disp-05-impl-review-001`. Reviewer must verify live MCP-connection evidence, not unit tests alone. Do not mark Shipped without APPROVE_IMPLEMENTATION.

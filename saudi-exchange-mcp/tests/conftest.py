@@ -12,6 +12,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=False,
         help="Allow live Google Finance HTTP (opt-in; default pytest stays offline).",
     )
+    parser.addoption(
+        "--live-mcp",
+        action="store_true",
+        default=False,
+        help="Allow the live stdio MCP session (implies live Google HTTP).",
+    )
 
 
 def pytest_configure(config: pytest.Config) -> None:
@@ -19,21 +25,29 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers",
         "live_google: hits Google Finance over the network; skipped unless --live-google or SAUDI_LIVE_GOOGLE=1",
     )
+    config.addinivalue_line(
+        "markers",
+        "live_mcp: live stdio MCP session (Google + stored PDF); skipped unless --live-google/--live-mcp or SAUDI_LIVE_GOOGLE=1",
+    )
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
-    enabled = bool(config.getoption("--live-google")) or os.environ.get("SAUDI_LIVE_GOOGLE") == "1"
+    enabled = (
+        bool(config.getoption("--live-google"))
+        or bool(config.getoption("--live-mcp"))
+        or os.environ.get("SAUDI_LIVE_GOOGLE") == "1"
+    )
     if enabled:
         return
     skip = pytest.mark.skip(reason="opt-in live Google: pass --live-google or SAUDI_LIVE_GOOGLE=1")
     for item in items:
-        if "live_google" in item.keywords:
+        if "live_google" in item.keywords or "live_mcp" in item.keywords:
             item.add_marker(skip)
 
 
 @pytest.fixture(autouse=True)
 def _block_live_httpx(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch):
-    if request.node.get_closest_marker("live_google"):
+    if request.node.get_closest_marker("live_google") or request.node.get_closest_marker("live_mcp"):
         yield
         return
 
