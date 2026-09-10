@@ -137,14 +137,15 @@ Proposed by Builder disp-05-impl-001 (not independently accepted). Product stdio
 Plan review complete.
 Plan approval: APPROVE_PLAN disp-05-plan-001 reviewer=bc-77e0572d-cf37-513e-a962-4c16c8137d01 (Cursor Grok 4.6) contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 snapshot=sha256:a99c3c9f3c321c6e3a116c4ffc0ce83e41057efd66503b483544dc88b7b5c8b0 blockers=none artifact=loop/manifests/disp-05-plan-001-result.md
 Implementation approval: APPROVE_IMPLEMENTATION disp-05-impl-review-001 reviewer=bc-cbb75edc-d8c4-5121-9eff-9852c0b2df98 (Cursor Grok 4.6) contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 candidate=sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 blockers=none artifact=loop/manifests/disp-05-impl-review-001-result.md
+Release approval is recorded in SLICES Release evidence (APPROVE_RELEASE disp-release-001); this page remains the slice 05 Shipped receipt.
 Each result records dispatch ID, reviewer identity, verdict, contract identity, snapshot identity, evidence, and criterion-specific blockers.
 
 ## Loop state
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
-Worker / role / phase: pending / Reviewer / release-review
-Dispatch ID / launch state / input identity: disp-release-001 / pending-launch / contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 candidate=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a
-Pending result / last consumed dispatch: none / disp-05-impl-review-001
+Worker / role / phase: none / none / complete
+Dispatch ID / launch state / input identity: disp-release-001 / consumed / contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 candidate=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a
+Pending result / last consumed dispatch: none / disp-release-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
 Snapshot coverage: All regular files and symlinks under `saudi-exchange-mcp/` with sorted relative paths, SHA-256 file bytes, types, executable modes, and symlink targets. Includes source, tests, configuration, lockfiles, protocol files, loop identity tools, and non-secret evidence docs. `BUILD.md` and `SLICES.md` are hashed from their LOOP contract extracts so Proof/Review/Loop-state bookkeeping, Status, Next, run status, release evidence, and Shipped/Now placement do not change snapshot identity.
@@ -160,13 +161,14 @@ Open acceptance gaps / prior failing evidence: none
 Repair awaiting review: false
 Review events:
 - event=rev-05-impl-001 dispatch=disp-05-impl-review-001 phase=implementation-review verdict=APPROVE_IMPLEMENTATION reviewer=bc-cbb75edc-d8c4-5121-9eff-9852c0b2df98 contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 snapshot_before=sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 snapshot_after=sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 gaps=none rejection_count=0 no_progress=0 artifact=loop/manifests/disp-05-impl-review-001-result.md
+- event=rev-release-001 dispatch=disp-release-001 phase=release-review verdict=APPROVE_RELEASE reviewer=bc-b0f896e5-a794-56d4-a0cd-613f13187dbd contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 snapshot_before=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a snapshot_after=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a gaps=none failed_release_reviews=0 artifact=loop/manifests/disp-release-001-result.md (durable summary is SLICES Release evidence)
 Budget limit / consumed / measurement: Not configured; no execution budget was supplied
 Blocker / resume status / resume action / recheck condition / deadline: none
-Advance phase: archive written; release pending
+Advance phase: complete
 Next slice ID / draft: None — target complete
 
 ## Status
 Shipped
 
 ## Next
-Independent release-gates review `disp-release-001`. No new Builder dispatch. BUILD.md remains the slice 05 Shipped receipt.
+None — target complete. Hybrid Pilot v0 run status is Complete. BUILD.md remains the slice 05 Shipped receipt. No further Loop work without a newly authorized target or repair.

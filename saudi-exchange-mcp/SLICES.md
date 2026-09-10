@@ -39,7 +39,7 @@ The requester researching Saudi-listed companies through an MCP-capable assistan
 **Authority:** User instruction dated 2026-09-09 authorized execution of this confirmed target, including Google Finance company research and Saudi Exchange official-report retrieval. No background execution, deployment, publishing, purchases, or work outside this target is authorized.
 
 ## Run status
-Finalizing — Now empty, target complete pending independent release review
+Complete
 
 ## Open decisions
 - Resolved 2026-09-09: Hybrid Pilot v0 through slice 05 is the confirmed execution target. Release validation host: a local stdio MCP server exercised through an in-workspace MCP client, with Cursor MCP install documented. Ordinary design choices do not require reconfirmation.
@@ -61,10 +61,13 @@ Finalizing — Now empty, target complete pending independent release review
 
 ## Release evidence
 Now: None — target complete (Now section body empty; mapped slice 05 criteria preserved under Later so contract identity is unchanged).
-Pending independent release review disp-release-001 against post-archive candidate sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a (file_count=117). Implementation-approved candidate was sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 (file_count=116); coordinator-computed delta is the accepted archive `slices/05-hybrid-mcp.md` only. Slice 05 contract sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3.
+Verdict: APPROVE_RELEASE disp-release-001. Coordinator independently recomputed contract sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 and post-archive candidate sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a (file_count=117) before applying this result; they matched the Reviewer before/after identities and the dispatch inputs. Implementation-approved candidate sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 (file_count=116); proven covered delta is `slices/05-hybrid-mcp.md` only. Reviewer bc-b0f896e5-a794-56d4-a0cd-613f13187dbd (Cursor Grok 4.6) did not edit the candidate.
+Live proof (field-presence only; no live Google bodies in git): one stdio connection to `python -m saudi_exchange_reports.mcp` (initialize, tools/list, tools/call). Default pytest 178 passed, 7 skipped. Live `tests/test_mcp_live.py` 1 passed. Independent live session with `SAUDI_MCP_USE_BROWSER=1`: Arabic/English Aramco lookup matched `2222:TADAWUL`; `2222:SAU` not_found; Google overview/news/profile/earnings/IS through MCP; BS/CF retrieved with `display_label_gap`; live Saudi listing 44 reports after urllib AJAX 500; Maaden original PDF hash `d76aaa7c371da4a0c3a23edbfb0663339590bfa959e1c8396350bf27dcc6767e` read/searched via MCP (notes p.19 native). Combined Google+Saudi calls on the same connection with separate provenance. Artifact: `loop/manifests/disp-release-001-result.md` (gitignored; summary here is the durable git record).
 Failed release reviews for this target: 0
 Pending release result: none
-Release review events / last consumed dispatch: none
+Release review events / last consumed dispatch:
+- event=rev-release-001 dispatch=disp-release-001 phase=release-review verdict=APPROVE_RELEASE reviewer=bc-b0f896e5-a794-56d4-a0cd-613f13187dbd contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 snapshot_before=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a snapshot_after=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a gaps=none failed_release_reviews=0 artifact=loop/manifests/disp-release-001-result.md
+Last consumed dispatch: disp-release-001
 
 ## Shipped
 - 01 — Company report discovery and original-PDF retrieval — accepted archive: [slices/01-report-retrieval.md](slices/01-report-retrieval.md). Implementation approval disp-01-impl-review-002, contract sha256:122bc93b0de9d398055a464ad8bfdc933849c80890e0d8285db244d57e23fe91, candidate sha256:e68c89956ab1f6f6e3dfb7039faea45e1e3fee82ed91aa3d4d028c6b158358fe.
