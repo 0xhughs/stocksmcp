@@ -143,7 +143,7 @@ Each result records dispatch ID, reviewer identity, verdict, contract identity, 
 Execution mode / tool adapter: Cursor Cloud Agent coordinator (run bc-ee81624b-9342-4c75-b5b0-a03c9edd6492) dispatches independent Builder and Reviewer via Cursor Task subagents with isolated context and distinct model slugs. Reviewer never edits the candidate. One active worker per checkout `/workspace`.
 Coordinator: Cursor Cloud Agent bc-ee81624b-9342-4c75-b5b0-a03c9edd6492 (workspace `/workspace`, branch `cursor/hybrid-mcp-pilot-6492`)
 Worker / role / phase: pending / Reviewer / release-review
-Dispatch ID / launch state / input identity: disp-release-001 / pending-launch / contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 candidate=sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a
+Dispatch ID / launch state / input identity: disp-release-001 / pending-launch / contract=sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 candidate=sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842
 Pending result / last consumed dispatch: none / disp-05-impl-review-001
 Snapshot capture command: python3 loop/identity.py snapshot loop/manifests/snapshot.json
 Snapshot recheck command: python3 loop/identity.py snapshot loop/manifests/snapshot-recheck.json
@@ -152,8 +152,7 @@ Snapshot exclusions: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/
 Baseline snapshot: sha256:a99c3c9f3c321c6e3a116c4ffc0ce83e41057efd66503b483544dc88b7b5c8b0 file_count=100 path=loop/manifests/snapshot.json
 Contract identity: sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 path=loop/manifests/contract.json
 Contract identity: sha256:6b673206c8507506b5d5b53b89204d3a37558524ea0c1daed23de09d114ddaa3 path=loop/manifests/contract.json
-Candidate snapshot (implementation-approved): sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 file_count=116 path=loop/manifests/candidate.json builder=bc-cc146335-86c4-58e8-840c-bc0c8b627a0e
-Release candidate snapshot (post-archive): sha256:43aa277543d0a97d4ae46badcb8a19706479168c23651869d99d243ff73ed04a file_count=117 path=loop/manifests/candidate-post-archive.json. Coordinator-computed delta versus the implementation-approved snapshot: added covered file `slices/05-hybrid-mcp.md` only; no other covered path changed. Application code/tests/evidence under `src/`, `tests/`, and `evidence/05-hybrid-mcp/` are unchanged from APPROVE_IMPLEMENTATION.
+Candidate snapshot: sha256:3fd4cb8c7fc8617be28b27490a57c3e35fc538d7db68652298740a5c95316842 file_count=116 path=loop/manifests/candidate.json builder=bc-cc146335-86c4-58e8-840c-bc0c8b627a0e
 Rejection count: 0
 Consecutive no-progress repairs: 0
 Open acceptance gaps / prior failing evidence: none
